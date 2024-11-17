@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 페이지</title>
+</head>
+<body>
+    <!-- 고정된 카테고리 줄 -->
+    <div class="header">
+        <div class="menu" id="menu"></div>
+        <div class="user-options">
+            <div class="inquiry">문의하기</div>
+            <div class="login-signup" onclick="location.href='login.html'">로그인 <span class="separator"></span> 회원가입</div>
+        </div>
+    </div>
+
+    <!-- 회원가입 폼 -->
+    <div class="signup-container">
+        <h2>회원가입</h2>
+        <input type="email" id="email" class="input-field" placeholder="이메일" required>
+        <input type="password" id="password" class="input-field" placeholder="비밀번호" required>
+        <input type="password" id="confirmPassword" class="input-field" placeholder="비밀번호 확인" required>
+        <input type="text" id="name" class="input-field" placeholder="이름" required>
+        <input type="text" id="address" class="input-field" placeholder="주소" required>
+        <button onclick="signUp()" class="signup-btn">회원가입</button>
+        <a href="login.html" class="login-link">이미 계정이 있으신가요? 로그인하기</a>
+    </div><style>
+        /* 기본 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* 고정된 카테고리 줄 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid black;
+        }
+        .menu, .user-options {
+            display: flex;
+            gap: 15px;
+        }
+        .menu div, .inquiry, .login-signup {
+            padding: 10px 30px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        .separator {
+            border-left: 1px solid black;
+            height: 14px;
+            margin: 0 5px;
+        }
+        /* 회원가입 폼 스타일 */
+        .signup-container {
+            margin-top: 150px;
+            width: 400px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .input-field {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .signup-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .signup-btn:hover {
+            background-color: #45a049;
+        }
+        .login-link {
+            margin-top: 15px;
+            display: block;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
+    </style><script>
+    // 카테고리 항목 생성 및 추가
+    const categories = ["상의", "하의", "신발", "악세서리"];
+    const menuContainer = document.getElementById("menu");
+
+    categories.forEach(category => {
+        const div = document.createElement("div");
+        div.textContent = category;
+        menuContainer.appendChild(div);
+    });
+
+    // 회원가입 함수
+    async function signUp() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const name = document.getElementById("name").value;
+        const address = document.getElementById("address").value;
+
+        // 기본적인 유효성 검사
+        if (!email || !password || !confirmPassword || !name || !address) {
+            alert("모든 필드를 입력해주세요.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    name,
+                    address
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("회원가입이 완료되었습니다.");
+                window.location.href = "login.html";
+            } else {
+                alert(data.message || "회원가입에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error('회원가입 오류:', error);
+            alert("회원가입 처리 중 오류가 발생했습니다.");
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 화면</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 검색창 스타일 */
+        .search-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px 40px;
+            margin-top: 100px;
+        }
+        .search-bar {
+            border: 1px solid black;
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+        /* 내용 영역 */
+        .content {
+            display: flex;
+            padding: 40px;
+            gap: 40px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .popular-products {
+            display: flex;
+            gap: 30px;
+        }
+        .popular-item {
+            border: 1px solid black;
+            width: 250px;
+            height: 400px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .popular-item::before {
+            content: "인기상품";
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            padding: 5px;
+            border: 1px solid black;
+            border-radius: 10px;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- 고정된 헤더 메뉴 -->
+    <div class="header">
+        <div class="menu" id="menu">
+            <div>상의</div>
+            <div>하의</div>
+            <div>신발</div>
+            <div>악세서리</div>
+        </div>
+        <div class="user-options">
+            <div class="inquiry">문의하기</div>
+            <div class="login-signup">
+                <span onclick="location.href='login.html'">로그인</span>
+                <span class="separator"></span>
+                <span onclick="location.href='signup.html'">회원가입</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 검색창 -->
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="검색">
+    </div>
+
+    <!-- 내용 영역 -->
+    <div class="content">
+        <div class="popular-products">
+            <div class="popular-item"></div>
+            <div class="popular-item"></div>
+            <div class="popular-item"></div>
+        </div>
+    </div>
+
+    <script>
+        // 로그인 상태 확인
+        window.onload = function() {
+            const userID = localStorage.getItem('userID');
+            const userName = localStorage.getItem('name');
+            
+            if (userID && userName) {
+                // 로그인된 상태
+                const loginSignup = document.querySelector('.login-signup');
+                loginSignup.innerHTML = `<span>${userName}님</span><span class="separator"></span><span onclick="logout()">로그아웃</span>`;
+            }
+        }
+
+        // 로그아웃 함수
+        function logout() {
+            localStorage.removeItem('userID');
+            localStorage.removeItem('name');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
