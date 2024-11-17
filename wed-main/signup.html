@@ -8,10 +8,15 @@
 <body>
     <!-- 고정된 카테고리 줄 -->
     <div class="header">
+        <div class="logo" onclick="location.href='index.html'">WED</div>
         <div class="menu" id="menu"></div>
         <div class="user-options">
             <div class="inquiry">문의하기</div>
-            <div class="login-signup" onclick="location.href='login.html'">로그인 <span class="separator"></span> 회원가입</div>
+            <div class="login-signup">
+                <span onclick="location.href='login.html'">로그인</span>
+                <span class="separator"></span>
+                <span onclick="location.href='signup.html'">회원가입</span>
+            </div>
         </div>
     </div>
 
@@ -41,19 +46,36 @@
             top: 0;
             left: 0;
             width: 100%;
+            height: 80px;
             background-color: white;
             z-index: 1000;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 0 20px;
             border-bottom: 1px solid black;
         }
-        .menu, .user-options {
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px 20px;
+        }
+        .menu {
+            display: flex;
+            margin-left: 20px;
+        }
+        .menu div {
+            padding: 10px 30px;
+            border: 1px solid black;
+            text-align: center;
+            margin-right: 5px;
+        }
+        .user-options {
+            margin-left: auto;
             display: flex;
             gap: 15px;
         }
-        .menu div, .inquiry, .login-signup {
+        .inquiry, .login-signup {
             padding: 10px 30px;
             border: 1px solid black;
             text-align: center;

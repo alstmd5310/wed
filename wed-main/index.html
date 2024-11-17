@@ -49,19 +49,64 @@
             border-radius: 10px;          /* 모서리 둥글게 */
             background-color: white;      /* 배경색 */
         }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid black;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px 20px;
+        }
+
+        .menu {
+            display: flex;
+            margin-left: 20px;
+        }
+
+        .menu div {
+            padding: 10px 30px;
+            border: 1px solid black;
+            text-align: center;
+            margin-right: 5px;
+        }
+
+        .user-options {
+            margin-left: auto;
+            display: flex;
+            gap: 15px;
+        }
+
+        .inquiry, .login-signup {
+            padding: 10px 30px;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .separator {
+            border-left: 1px solid black;
+            height: 14px;
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
-    <div class="header">                  <!-- 헤더 영역 -->
-        <div class="menu" id="menu">      <!-- 메뉴 네비게이션 -->
-            <div>상의</div>               <!-- 메뉴 아이템들 -->
-            <div>하의</div>
-            <div>신발</div>
-            <div>악세서리</div>
-        </div>
-        <div class="user-options">        <!-- 사용자 옵션 영역 -->
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">WED</div>
+        <div class="menu" id="menu"></div>
+        <div class="user-options">
             <div class="inquiry">문의하기</div>
-            <div class="login-signup">     <!-- 로그인/회원가입 영역 -->
+            <div class="login-signup">
                 <span onclick="location.href='login.html'">로그인</span>
                 <span class="separator"></span>
                 <span onclick="location.href='signup.html'">회원가입</span>
@@ -82,23 +127,49 @@
     </div>
 
     <script>
-        // 페이지 로드 시 실행
-        window.onload = function() {       
-            const userID = localStorage.getItem('userID');    // 로그인 정보 확인
+        // 로그인 상태 체크 및 헤더 업데이트
+        function updateHeader() {
+            const userID = localStorage.getItem('userID');
             const userName = localStorage.getItem('name');
-            
-            if (userID && userName) {      // 로그인 상태일 때
-                const loginSignup = document.querySelector('.login-signup');
-                loginSignup.innerHTML = `...`; // 로그인 상태 UI 변경
+            const loginSignupDiv = document.querySelector('.login-signup');
+
+            if (userID && userName) {
+                // 로그인된 경우
+                loginSignupDiv.innerHTML = `
+                    <span>${userName}님</span>
+                    <span class="separator"></span>
+                    <span onclick="logout()">로그아웃</span>
+                `;
+            } else {
+                // 로그인되지 않은 경우
+                loginSignupDiv.innerHTML = `
+                    <span onclick="location.href='login.html'">로그인</span>
+                    <span class="separator"></span>
+                    <span onclick="location.href='signup.html'">회원가입</span>
+                `;
             }
         }
 
         // 로그아웃 함수
-        function logout() {                
-            localStorage.removeItem('userID'); // 로그인 정보 삭제
+        function logout() {
+            localStorage.removeItem('userID');
             localStorage.removeItem('name');
-            location.reload();             // 페이지 새로고침
+            updateHeader();
+            location.reload();
         }
+
+        // 페이지 로드 시 헤더 업데이트
+        window.onload = function() {
+            updateHeader();
+            // 기존의 카테고리 생성 코드
+            const categories = ["상의", "하의", "신발", "악세서리"];
+            const menuContainer = document.getElementById("menu");
+            categories.forEach(category => {
+                const div = document.createElement("div");
+                div.textContent = category;
+                menuContainer.appendChild(div);
+            });
+        };
     </script>
 </body>
 </html>

@@ -45,17 +45,62 @@
         .signup-link:hover {
             text-decoration: underline;
         }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid black;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px 20px;
+        }
+
+        .menu {
+            display: flex;
+            margin-left: 20px;
+        }
+
+        .menu div {
+            padding: 10px 30px;
+            border: 1px solid black;
+            text-align: center;
+            margin-right: 5px;
+        }
+
+        .user-options {
+            margin-left: auto;
+            display: flex;
+            gap: 15px;
+        }
+
+        .inquiry, .login-signup {
+            padding: 10px 30px;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .separator {
+            border-left: 1px solid black;
+            height: 14px;
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
-    <!-- 고정된 헤더 메뉴 -->
+    <!-- 고정된 카테고리 줄 -->
     <div class="header">
-        <div class="menu" id="menu">
-            <div>상의</div>
-            <div>하의</div>
-            <div>신발</div>
-            <div>악세서리</div>
-        </div>
+        <div class="logo" onclick="location.href='index.html'">WED</div>
+        <div class="menu" id="menu"></div>
         <div class="user-options">
             <div class="inquiry">문의하기</div>
             <div class="login-signup">
@@ -81,29 +126,25 @@
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
 
-            try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    localStorage.setItem('userID', data.userID);
-                    localStorage.setItem('name', data.name);
-                    window.location.href = "index.html";
-                } else {
-                    alert(data.message || "로그인에 실패했습니다");
-                }
-            } catch (error) {
-                console.error('로그인 오류:', error);
-                alert("로그인 처리 중 오류가 발생했습니다");
+            // 테스트용 계정
+            if (email === "test@test.com" && password === "test123") {
+                localStorage.setItem('userID', '1');
+                localStorage.setItem('name', '운영자');
+                window.location.href = "index.html";
+            } else {
+                alert("이메일 또는 비밀번호가 올바르지 않습니다");
             }
         }
+
+        // 카테고리 항목 생성 및 추가
+        const categories = ["상의", "하의", "신발", "악세서리"];
+        const menuContainer = document.getElementById("menu");
+
+        categories.forEach(category => {
+            const div = document.createElement("div");
+            div.textContent = category;
+            menuContainer.appendChild(div);
+        });
     </script>
 </body>
 </html>
