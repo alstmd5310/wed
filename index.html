@@ -1,108 +1,103 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!DOCTYPE html>                           <!-- HTML5 문서 선언 -->
+<html lang="ko">                          <!-- 한국어 문서임을 명시 -->
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>메인 화면</title>
-    <link rel="stylesheet" href="common.css">
+    <meta charset="UTF-8">                <!-- UTF-8 문자 인코딩 설정 -->
+    <meta name="viewport" content="...">   <!-- 모바일 반응형 뷰포트 설정 -->
+    <title>메인 화면</title>               <!-- 브라우저 탭에 표시될 제목 -->
+    <link rel="stylesheet" href="common.css"> <!-- 공통 CSS 파일 연결 -->
+
     <style>
-        /* 검색창 스타일 */
-        .search-container {
-            display: flex;
-            justify-content: flex-end;
-            padding: 20px 40px;
-            margin-top: 100px;
+        .search-container {                /* 검색창 컨테이너 스타일 */
+            display: flex;                 /* Flexbox 레이아웃 사용 */
+            justify-content: flex-end;     /* 우측 정렬 */
+            padding: 20px 40px;           /* 상하좌우 패딩 */
+            margin-top: 100px;            /* 상단 여백 */
         }
-        .search-bar {
-            border: 1px solid black;
-            padding: 10px;
-            width: 100%;
-            max-width: 400px;
+        .search-bar {                     /* 검색창 입력필드 스타일 */
+            border: 1px solid black;      /* 테두리 */
+            padding: 10px;                /* 내부 여백 */
+            width: 100%;                  /* 전체 너비 */
+            max-width: 400px;             /* 최대 너비 제한 */
         }
-        /* 내용 영역 */
-        .content {
-            display: flex;
-            padding: 40px;
-            gap: 40px;
-            justify-content: center;
-            margin-top: 20px;
+        .content {                        /* 메인 컨텐츠 영역 스타일 */
+            display: flex;                /* Flexbox 레이아웃 */
+            padding: 40px;                /* 패딩 */
+            gap: 40px;                    /* 요소 간 간격 */
+            justify-content: center;       /* 중앙 정렬 */
+            margin-top: 20px;             /* 상단 여백 */
         }
-        .popular-products {
-            display: flex;
-            gap: 30px;
+        .popular-products {               /* 인기상품 컨테이너 스타일 */
+            display: flex;                /* Flexbox 레이아웃 */
+            gap: 30px;                    /* 상품 간 간격 */
         }
-        .popular-item {
-            border: 1px solid black;
-            width: 250px;
-            height: 400px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .popular-item {                   /* 개별 인기상품 아이템 스타일 */
+            border: 1px solid black;      /* 테두리 */
+            width: 250px;                 /* 너비 */
+            height: 400px;                /* 높이 */
+            position: relative;           /* 상대 위치 설정 */
+            display: flex;                /* Flexbox 레이아웃 */
+            align-items: center;          /* 수직 중앙 정렬 */
+            justify-content: center;       /* 수평 중앙 정렬 */
         }
-        .popular-item::before {
-            content: "인기상품";
-            position: absolute;
-            top: -20px;
-            left: 20px;
-            padding: 5px;
-            border: 1px solid black;
-            border-radius: 10px;
-            background-color: white;
+        .popular-item::before {           /* 인기상품 라벨 스타일 */
+            content: "인기상품";           /* 표시될 텍스트 */
+            position: absolute;           /* 절대 위치 설정 */
+            top: -20px;                   /* 상단 위치 */
+            left: 20px;                   /* 좌측 위치 */
+            padding: 5px;                 /* 내부 여백 */
+            border: 1px solid black;      /* 테두리 */
+            border-radius: 10px;          /* 모서리 둥글게 */
+            background-color: white;      /* 배경색 */
         }
     </style>
 </head>
 <body>
-    <!-- 고정된 헤더 메뉴 -->
-    <div class="header">
-        <div class="menu" id="menu">
-            <div>상의</div>
+    <div class="header">                  <!-- 헤더 영역 -->
+        <div class="menu" id="menu">      <!-- 메뉴 네비게이션 -->
+            <div>상의</div>               <!-- 메뉴 아이템들 -->
             <div>하의</div>
             <div>신발</div>
             <div>악세서리</div>
         </div>
-        <div class="user-options">
+        <div class="user-options">        <!-- 사용자 옵션 영역 -->
             <div class="inquiry">문의하기</div>
-            <div class="login-signup">
-                <span onclick="location.href='login.html'">로그인</span>
+            <div class="login-signup">     <!-- 로그인/회원가입 영역 -->
+                <span onclick="...">로그인</span>
                 <span class="separator"></span>
-                <span onclick="location.href='signup.html'">회원가입</span>
+                <span onclick="...">회원가입</span>
             </div>
         </div>
     </div>
 
-    <!-- 검색창 -->
-    <div class="search-container">
+    <div class="search-container">        <!-- 검색창 영역 -->
         <input type="text" class="search-bar" placeholder="검색">
     </div>
 
-    <!-- 내용 영역 -->
-    <div class="content">
-        <div class="popular-products">
-            <div class="popular-item"></div>
+    <div class="content">                 <!-- 메인 컨텐츠 영역 -->
+        <div class="popular-products">     <!-- 인기상품 목록 -->
+            <div class="popular-item"></div> <!-- 인기상품 아이템들 -->
             <div class="popular-item"></div>
             <div class="popular-item"></div>
         </div>
     </div>
 
     <script>
-        // 로그인 상태 확인
-        window.onload = function() {
-            const userID = localStorage.getItem('userID');
+        // 페이지 로드 시 실행
+        window.onload = function() {       
+            const userID = localStorage.getItem('userID');    // 로그인 정보 확인
             const userName = localStorage.getItem('name');
             
-            if (userID && userName) {
-                // 로그인된 상태
+            if (userID && userName) {      // 로그인 상태일 때
                 const loginSignup = document.querySelector('.login-signup');
-                loginSignup.innerHTML = `<span>${userName}님</span><span class="separator"></span><span onclick="logout()">로그아웃</span>`;
+                loginSignup.innerHTML = `...`; // 로그인 상태 UI 변경
             }
         }
 
         // 로그아웃 함수
-        function logout() {
-            localStorage.removeItem('userID');
+        function logout() {                
+            localStorage.removeItem('userID'); // 로그인 정보 삭제
             localStorage.removeItem('name');
-            location.reload();
+            location.reload();             // 페이지 새로고침
         }
     </script>
 </body>
