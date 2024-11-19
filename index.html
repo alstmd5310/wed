@@ -1,0 +1,186 @@
+<!DOCTYPE html>                           <!-- HTML5 문서 선언 -->
+<html lang="ko">                          <!-- 한국어 문서임을 명시 -->
+<head>
+    <meta charset="UTF-8">                <!-- UTF-8 문자 인코딩 설정 -->
+    <meta name="viewport" content="...">   <!-- 모바일 반응형 뷰포트 설정 -->
+    <title>메인 화면</title>               <!-- 브라우저 탭에 표시될 제목 -->
+    <link rel="stylesheet" href="common.css"> <!-- 공통 CSS 파일 연결 -->
+
+    <style>
+        .search-container {                /* 검색창 컨테이너 스타일 */
+            display: flex;                 /* Flexbox 레이아웃 사용 */
+            justify-content: flex-end;     /* 우측 정렬 */
+            padding: 20px 40px;           /* 상하좌우 패딩 */
+            margin-top: 100px;            /* 상단 여백 */
+        }
+        .search-bar {                     /* 검색창 입력필드 스타일 */
+            border: 1px solid black;      /* 테두리 */
+            padding: 10px;                /* 내부 여백 */
+            width: 100%;                  /* 전체 너비 */
+            max-width: 400px;             /* 최대 너비 제한 */
+        }
+        .content {                        /* 메인 컨텐츠 영역 스타일 */
+            display: flex;                /* Flexbox 레이아웃 */
+            padding: 40px;                /* 패딩 */
+            gap: 40px;                    /* 요소 간 간격 */
+            justify-content: center;       /* 중앙 정렬 */
+            margin-top: 20px;             /* 상단 여백 */
+        }
+        .popular-products {               /* 인기상품 컨테이너 스타일 */
+            display: flex;                /* Flexbox 레이아웃 */
+            gap: 30px;                    /* 상품 간 간격 */
+        }
+        .popular-item {                   /* 개별 인기상품 아이템 스타일 */
+            border: 1px solid black;      /* 테두리 */
+            width: 250px;                 /* 너비 */
+            height: 400px;                /* 높이 */
+            position: relative;           /* 상대 위치 설정 */
+            display: flex;                /* Flexbox 레이아웃 */
+            align-items: center;          /* 수직 중앙 정렬 */
+            justify-content: center;       /* 수평 중앙 정렬 */
+        }
+        .popular-item::before {           /* 인기상품 라벨 스타일 */
+            content: "인기상품";           /* 표시될 텍스트 */
+            position: absolute;           /* 절대 위치 설정 */
+            top: -20px;                   /* 상단 위치 */
+            left: 20px;                   /* 좌측 위치 */
+            padding: 5px;                 /* 내부 여백 */
+            border: 1px solid black;      /* 테두리 */
+            border-radius: 10px;          /* 모서리 둥글게 */
+            background-color: white;      /* 배경색 */
+        }
+        /* 헤더 스타일 - 상단에 고정되는 메뉴바 */
+        .header {
+            position: fixed;              /* 화면 상단에 고정 */
+            top: 0;                       /* 최상단에 위치 */
+            left: 0;                      /* 좌측 끝에 위치 */
+            width: 100%;                  /* 전체 너비 사용 */
+            background-color: white;      /* 배경색 흰색 */
+            z-index: 1000;               /* 다른 요소들보다 앞에 표시 */
+            display: flex;               /* Flexbox 레이아웃 사용 */
+            align-items: center;         /* 수직 중앙 정렬 */
+            padding: 20px;               /* 내부 여백 */
+            border-bottom: 1px solid black; /* 하단 테두리 */
+        }
+
+        /* 로고 스타일 */
+        .logo {
+            font-size: 24px;             /* 글자 크기 */
+            font-weight: bold;           /* 글자 굵기 */
+            cursor: pointer;             /* 마우스 커서를 포인터로 변경 */
+            padding: 10px 20px;          /* 내부 여백 */
+        }
+
+        /* 메뉴 영역 스타일 */
+        .menu {
+            display: flex;               /* Flexbox 레이아웃 사용 */
+            margin-left: 20px;           /* 좌측 여백 */
+        }
+
+        /* 메뉴 항목 스타일 */
+        .menu div {
+            padding: 10px 30px;          /* 내부 여백 */
+            border: 1px solid black;     /* 테두리 */
+            text-align: center;          /* 텍스트 중앙 정렬 */
+            margin-right: 5px;           /* 우측 여백 */
+        }
+
+        /* 사용자 옵션 영역 스타일 (로그인/회원가입 등) */
+        .user-options {
+            margin-left: auto;           /* 우측 끝으로 정렬 */
+            display: flex;               /* Flexbox 레이아웃 사용 */
+            gap: 15px;                   /* 요소들 사이 간격 */
+        }
+
+        /* 문의하기와 로그인/회원가입 버튼 스타일 */
+        .inquiry, .login-signup {
+            padding: 10px 30px;          /* 내부 여백 */
+            border: 1px solid black;     /* 테두리 */
+            text-align: center;          /* 텍스트 중앙 정렬 */
+        }
+
+        /* 구분선 스타일 */
+        .separator {
+            border-left: 1px solid black; /* 좌측 테두리로 구분선 생성 */
+            height: 14px;                /* 구분선 높이 */
+            margin: 0 5px;               /* 좌우 여백 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 상단 고정 헤더 -->
+    <div class="header">
+        <!-- 로고 - 클릭 시 메인 페이지로 이동 -->
+        <div class="logo" onclick="location.href='index.html'">WED</div>
+        <!-- 카테고리 메뉴 영역 - JavaScript로 동적 생성됨 -->
+        <div class="menu" id="menu"></div>
+        <!-- 사용자 옵션 영역 -->
+        <div class="user-options">
+            <!-- 문의하기 버튼 -->
+            <div class="inquiry">문의하기</div>
+            <!-- 로그인/회원가입 버튼 영역 -->
+            <div class="login-signup" id="loginSection">
+                <!-- 이 부분은 JavaScript로 동적으로 변경될 것입니다 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="search-container">        <!-- 검색창 영역 -->
+        <input type="text" class="search-bar" placeholder="검색">
+    </div>
+
+    <div class="content">                 <!-- 메인 컨텐츠 영역 -->
+        <div class="popular-products">     <!-- 인기상품 목록 -->
+            <div class="popular-item"></div> <!-- 인기상품 아이템들 -->
+            <div class="popular-item"></div>
+            <div class="popular-item"></div>
+        </div>
+    </div>
+
+    <script>
+        // 로그인 상태 체크 및 표시 함수
+        function updateLoginSection() {
+            const loginSection = document.getElementById('loginSection');
+            const userID = localStorage.getItem('userID');
+            const userName = localStorage.getItem('name');
+
+            if (userID && userName) {
+                // 로그인 상태일 때
+                loginSection.innerHTML = `
+                    <span onclick="location.href='mypage.html'" style="cursor: pointer;">${userName}</span>
+                    <span class="separator"></span>
+                    <span onclick="logout()" style="cursor: pointer;">로그아웃</span>
+                `;
+            } else {
+                // 비로그인 상태일 때
+                loginSection.innerHTML = `
+                    <span onclick="location.href='login.html'">로그인</span>
+                    <span class="separator"></span>
+                    <span onclick="location.href='signup.html'">회원가입</span>
+                `;
+            }
+        }
+
+        // 로그아웃 함수
+        function logout() {
+            localStorage.removeItem('userID');
+            localStorage.removeItem('name');
+            updateLoginSection();
+            location.href = 'index.html';
+        }
+
+        // 페이지 로드 시 로그인 상태 체크
+        window.onload = function() {
+            updateLoginSection();
+            // 카테고리 메뉴 동적 생성
+            const categories = ["상의", "하의", "신발", "악세서리"];
+            const menuContainer = document.getElementById("menu");
+            categories.forEach(category => {
+                const div = document.createElement("div");
+                div.textContent = category;
+                menuContainer.appendChild(div);
+            });
+        };
+    </script>
+</body>
+</html>
