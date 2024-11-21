@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 정보 수정</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .edit-profile-container {
+            margin-top: 150px;
+            padding: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">WED</div>
+        <div class="menu" id="menu"></div>
+        <div class="user-options">
+            <div class="inquiry">문의하기</div>
+            <div class="login-signup" id="loginSection"></div>
+        </div>
+    </div>
+
+    <!-- 내 정보 수정 폼 -->
+    <div class="edit-profile-container">
+        <h2>내 정보 수정</h2>
+        <form id="editProfileForm" onsubmit="return updateProfile(event)">
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" readonly>
+            </div>
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+                <label for="currentPassword">현재 비밀번호</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">새 비밀번호 (변경시에만 입력)</label>
+                <input type="password" id="newPassword" name="newPassword">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">새 비밀번호 확인</label>
+                <input type="password" id="confirmPassword" name="confirmPassword">
+            </div>
+            <button type="submit" class="submit-btn">정보 수정</button>
+        </form>
+    </div>
+
+    <script>
+        // 페이지 로드 시 사용자 정보 불러오기
+        window.onload = function() {
+            // 로그인 체크
+            const userID = localStorage.getItem('userID');
+            if (!userID) {
+                alert('로그인이 필요합니다.');
+                location.href = 'login.html';
+                return;
+            }
+
+            // 현재 사용자 정보 불러오기
+            loadUserInfo();
+            
+            // 헤더 메뉴 생성
+            const categories = ["상의", "하의", "신발", "악세서리"];
+            const menuContainer = document.getElementById("menu");
+            categories.forEach(category => {
+                const div = document.createElement("div");
+                div.textContent = category;
+                menuContainer.appendChild(div);
+            });
+        };
+
+        // 사용자 정보 불러오기
+        async function loadUserInfo() {
+            try {
+                const userID = localStorage.getItem('userID');
+                const response = await fetch(`get_user_info.jsp?id=${userID}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('email').value = data.email;
+                    document.getElementById('name').value = data.name;
+                    document.getElementById('address').value = data.address;
+                } else {
+                    alert('사용자 정보를 불러오는데 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('사용자 정보를 불러오는데 실패했습니다.');
+            }
+        }
+
+        // 정보 수정 제출
+        async function updateProfile(event) {
+            event.preventDefault();
+
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword && newPassword !== confirmPassword) {
+                alert('새 비밀번호가 일치하지 않습니다.');
+                return false;
+            }
+
+            const formData = new FormData(document.getElementById('editProfileForm'));
+            formData.append('id', localStorage.getItem('userID'));
+
+            try {
+                const response = await fetch('update_profile.jsp', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('정보가 성공적으로 수정되었습니다.');
+                    localStorage.setItem('name', document.getElementById('name').value);
+                    location.href = 'mypage.html';
+                } else {
+                    alert(data.message || '정보 수정에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('정보 수정 중 오류가 발생했습니다.');
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html> 
