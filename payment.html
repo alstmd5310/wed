@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>결제 페이지</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 80%;
+      max-width: 800px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #444;
+    }
+    .confirmation-details {
+      display: none;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    .confirmation-details span {
+      font-weight: bold;
+    }
+  </style>
+  <script>
+    // 결제 완료 시 호출되는 함수
+    function completePayment() {
+      const name = document.getElementById("name").value;
+      const cardNumber = document.getElementById("card-number").value;
+      const address = document.getElementById("address").value;
+
+      // 결제 정보 확인 페이지로 내용 표시
+      document.getElementById("name-display").innerText = name;
+      document.getElementById("card-number-display").innerText = cardNumber;
+      document.getElementById("address-display").innerText = address;
+
+      // 결제 폼을 숨기고 확인 페이지를 보여줌
+      document.getElementById("payment-form").style.display = "none";
+      document.getElementById("confirmation-page").style.display = "block";
+    }
+    
+    // 로그인 페이지로 돌아가는 함수
+    function goMain() {
+      window.location.href = "index.html";
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <!-- 결제 폼 -->
+    <div id="payment-form">
+      <h2>결제 정보 입력</h2>
+      <div class="form-group">
+        <label for="name">이름</label>
+        <input type="text" id="name" placeholder="이름을 입력하세요" required>
+      </div>
+      <div class="form-group">
+        <label for="card-number">카드 번호</label>
+        <input type="text" id="card-number" placeholder="카드 번호를 입력하세요" required>
+      </div>
+      <div class="form-group">
+        <label for="address">배송지</label>
+        <input type="text" id="address" placeholder="배송지 주소를 입력하세요" required>
+      </div>
+      <button onclick="completePayment()">결제 완료하기</button>
+    </div>
+
+    <!-- 결제 완료 페이지 (숨겨져 있음) -->
+    <div id="confirmation-page" class="confirmation-details">
+      <h2>결제 완료</h2>
+      <p><span>이름:</span> <span id="name-display"></span></p>
+      <p><span>카드 번호:</span> <span id="card-number-display"></span></p>
+      <p><span>배송지:</span> <span id="address-display"></span></p>
+      <button onclick="goMain()">로그인 화면으로 돌아가기</button>
+    </div>
+  </div>
+</body>
+</html>

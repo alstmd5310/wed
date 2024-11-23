@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 상세 페이지</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f9f9f9;
+    }
+    .container {
+      display: flex;
+      width: 80%;
+      max-width: 1200px;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .left {
+      flex: 2;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #f4f4f4;
+    }
+    .left img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .right {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-info {
+      margin-bottom: 20px;
+    }
+    .product-info h2 {
+      margin: 0;
+      color: #333;
+    }
+    .product-info p {
+      color: #777;
+      margin: 10px 0;
+    }
+    .price {
+      color: #e74c3c;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .buttons button {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #333;
+      background-color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .buttons button:hover {
+      background-color: #333;
+      color: white;
+    }
+    .extra-section {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+    .extra-section ul {
+      padding-left: 20px;
+    }
+    .extra-section ul li {
+      margin-bottom: 10px;
+    }
+  </style>
+  <script>
+    // 장바구니 페이지로 이동하는 함수
+    function goToCart() {
+      location.href = 'cart.html'; // 'cart.html'로 이동
+    }
+
+    // 결제 페이지로 이동하는 함수
+    function goToPayment() {
+      location.href = 'payment.html'; // 'checkout.html'로 이동
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <!-- 상품 이미지 섹션 -->
+    <div class="left">
+      <img src="product-image.jpg" alt="상품 이미지">
+    </div>
+    <!-- 상품 상세 정보 및 버튼 섹션 -->
+    <div class="right">
+      <div class="product-info">
+        <h2>상품 이름</h2>
+        <p>이 상품은 최신 디자인과 최고의 품질을 자랑합니다. 지금 구매하여 특별한 경험을 느껴보세요!</p>
+        <p class="price">₩49,000</p>
+      </div>
+      <div class="buttons">
+        <!-- 장바구니 버튼 클릭 시 goToCart 함수 호출 -->
+        <button onclick="goToCart()">장바구니 넣기</button>
+        <!-- 결제 버튼 클릭 시 goToCheckout 함수 호출 -->
+        <button onclick="goTopayment()">구매하기</button>
+      </div>
+      <div class="extra-section">
+        <h3>추가 정보</h3>
+        <ul>
+          <li>재질: 100% 코튼</li>
+          <li>색상: 블랙, 화이트, 블루</li>
+          <li>사이즈: S, M, L, XL</li>
+          <li>배송: 2-3일 이내 배송</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
