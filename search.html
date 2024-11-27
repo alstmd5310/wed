@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 페이지</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<body>
+    
+    <div class="header">
+        <!-- 로고를 클릭하면 메인ㅁ 페이지로 이동 -->
+        <div class="logo" onclick="location.href='index.html'">WED</div>
+        <!-- 동적으로 생성되는 카테고리 메뉴 -->
+        <div class="menu" id="menu"></div>
+        <div class="user-options">
+            <!-- '문의하기' 페이지로 이동 -->
+            <div class="inquiry" onclick="location.href='inquiry.html'">문의하기</div>
+            <!-- 로그인 및 회원가입 버튼 -->
+            <div class="login-signup">
+                <span onclick="location.href='login.html'">로그인</span>
+                <span class="separator"></span>
+                <span onclick="location.href='signup.html'">회원가입</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 검색 콘텐츠 -->
+    <div class="search-container">
+        <h2>검색하기</h2>
+        <!-- 검색어 입력 필드 -->
+        <input type="text" id="search-input" placeholder="검색어를 입력하세요...">
+        <!-- 검색 버튼 -->
+        <button onclick="searchProducts()">검색</button>
+        <!-- 검색 결과를 표시하는 영역 -->
+        <div id="search-results"></div>
+   
