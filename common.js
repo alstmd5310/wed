@@ -9,7 +9,7 @@ function updateLoginSection() {
         loginSection.innerHTML = `
             <span onclick="location.href='mypage.html'" style="cursor: pointer;">${userName}</span>
             <span class="separator"></span>
-            <span onclick="logout()" style="cursor: pointer;">로그아웃</span>
+            <span onclick="logout()" style="cursor: pointer;"> 로그아웃</span>
         `;
     } else {
         // 비로그인 상태일 때
