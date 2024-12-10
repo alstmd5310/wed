@@ -163,9 +163,9 @@
         const data = await response.json(); // JSON 응답 처리
         if (data.success) {
             alert(data.message);
-            // 세션 저장 (선택 사항)
-            sessionStorage.setItem("userId", data.userId);
-            sessionStorage.setItem("name", data.name);
+            // localStorage에 데이터 저장
+            localStorage.setItem("userID", data.userId);
+            localStorage.setItem("name", data.name);
             // 메인 페이지로 이동
             window.location.href = "index.html";
         } else {
@@ -176,6 +176,7 @@
         console.error(error);
     }
 }
+
 
 
         // 카테고리 메뉴 항목 배열 정의
