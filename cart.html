@@ -1,0 +1,81 @@
+//장바구니 html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장바구니</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .cart-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .cart-item div {
+            flex: 1;
+        }
+        .remove-btn {
+            padding: 5px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h2>장바구니</h2>
+        <div id="cartItems"></div>
+    </div>
+    <script>
+        async function loadCart() {
+            const response = await fetch('/cart.jsp');
+            const data = await response.json();
+
+            const cartItems = document.getElementById("cartItems");
+            cartItems.innerHTML = "";
+
+            data.items.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "cart-item";
+                div.innerHTML = `
+                    <div>${item.name}</div>
+                    <div>${item.price}원</div>
+                    <div>${item.quantity}개</div>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})">삭제</button>
+                `;
+                cartItems.appendChild(div);
+            });
+        }
+
+        async function removeFromCart(cartId) {
+            const response = await fetch('/cart.jsp', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cartId })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert("삭제되었습니다.");
+                loadCart();
+            } else {
+                alert("삭제 실패: " + data.message);
+            }
+        }
+
+        loadCart();
+    </script>
+</body>
+</html>

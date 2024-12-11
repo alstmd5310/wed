@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상의 상품 목록</title>
+    <title>신발 상품 목록</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f7f7f7; }
         .header { position: fixed; top: 0; left: 0; width: 100%; background-color: white; border-bottom: 1px solid black; z-index: 1000; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
