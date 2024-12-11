@@ -13,11 +13,25 @@
         String address = request.getParameter("address");
         String newPassword = request.getParameter("newPassword");
 
-        // 디버깅 로그
-        System.out.println("userId: " + userId);
-        System.out.println("name: " + name);
-        System.out.println("address: " + address);
-        System.out.println("newPassword: " + newPassword);
+        // 디버깅 출력
+        System.out.println("Received Parameters:");
+        System.out.println("User ID: " + userId);
+        System.out.println("Name: " + name);
+        System.out.println("Address: " + address);
+        System.out.println("New Password: " + newPassword);
+
+        // 비밀번호가 비어있을 경우 기존 비밀번호 유지
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            String selectSql = "SELECT member_password FROM members WHERE member_id = ?";
+            pstmt = conn.prepareStatement(selectSql);
+            pstmt.setInt(1, Integer.parseInt(userId));
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                newPassword = rs.getString("member_password");
+            }
+            rs.close();
+            pstmt.close();
+        }
 
         // 데이터베이스 연결
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -31,8 +45,8 @@
             System.out.println("Database connection failed!");
             responseJson.put("success", false);
             responseJson.put("message", "Database connection failed!");
-        } else {
-            System.out.println("Database connection successful.");
+            out.print(responseJson);
+            return;
         }
 
         // 사용자 정보 업데이트
@@ -43,9 +57,11 @@
         pstmt.setString(3, newPassword);
         pstmt.setInt(4, Integer.parseInt(userId));
 
+        // SQL 실행 디버깅
         System.out.println("Executing SQL: " + updateSql);
 
         int rows = pstmt.executeUpdate();
+        System.out.println("Rows affected: " + rows);
 
         if (rows > 0) {
             responseJson.put("success", true);
