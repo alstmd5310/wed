@@ -9,7 +9,7 @@ function updateLoginSection() {
         loginSection.innerHTML = `
             <span onclick="location.href='mypage.html'" style="cursor: pointer;">${userName}</span>
             <span class="separator"></span>
-            <span onclick="logout()" style="cursor: pointer;"> 로그아웃</span>
+            <span onclick="logout()" style="cursor: pointer;">로그아웃</span>
         `;
     } else {
         // 비로그인 상태일 때
@@ -44,7 +44,17 @@ function initializeCommonComponents() {
             menuContainer.appendChild(div);
         });
     }
+
+    // 사용자 정보 표시
+    const userName = localStorage.getItem('name');
+    if (userName) {
+        const userNameElement = document.getElementById('userName');
+        if (userNameElement) {
+            userNameElement.textContent = userName;
+        }
+    }
 }
+
 
 // 페이지 로드 시 초기화 실행
 window.onload = initializeCommonComponents;
