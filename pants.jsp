@@ -2,10 +2,12 @@
 <%@ page import="java.sql.*" %>
 <!DOCTYPE html>
 <html lang="ko">
+    <link rel="stylesheet" href="common.css">
+    <script src="common.js" defer></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상의 상품 목록</title>
+    <title>하의 상품 목록</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f7f7f7; }
         .header { position: fixed; top: 0; left: 0; width: 100%; background-color: white; border-bottom: 1px solid black; z-index: 1000; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
@@ -21,13 +23,22 @@
     </style>
 </head>
 <body>
+    <!-- 상단 고정 헤더 -->
     <div class="header">
-        <div class="logo" onclick="location.href='index.jsp'">WED</div>
-        <div>상의 상품 목록</div>
+        <div class="logo" onclick="location.href='index.html'">WED</div>    
+        <div class="menu" id="menu"></div>
+        <div class="user-options">
+            <div class="inquiry">문의하기</div>
+            <div class="login-signup" id="loginSection"></div>
+        </div>
+    </div>
+    
+        
+        <div>하의 상품 목록</div>
     </div>
 
     <div class="content">
-        <h1>상의 상품 목록</h1>
+        <h1>하의 상품 목록</h1>
         <div class="grid">
             <%
                 Connection conn = null;
