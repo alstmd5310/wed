@@ -5,18 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>검색 페이지</title>
     <link rel="stylesheet" href="common.css">
+    <style>
+        /* 상품 목록 그리드 스타일 */
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        /* 개별 상품 박스 스타일 */
+        .item {
+            border: 1px solid black;
+            border-radius: 5px;
+            width: 250px;
+            padding: 20px;
+            background-color: white;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* 상품 이미지 스타일 */
+        .item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        /* 상품 이름 스타일 */
+        .item h3 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        /* 상품 가격 스타일 */
+        .item p {
+            color: #555;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        /* 버튼 스타일 */
+        .item button {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        /* 버튼 호버 효과 */
+        .item button:hover {
+            background-color: #444;
+        }
+    </style>
+    <script>
+        /* 더미 데이터를 기반으로 검색 결과를 동적으로 생성 */
+        const products = [
+            { id: 1, name: "상의 1", price: "₩25,000", img: "shirt1.jpg" },
+            { id: 2, name: "상의 2", price: "₩30,000", img: "shirt2.jpg" },
+            { id: 3, name: "상의 3", price: "₩20,000", img: "shirt3.jpg" }
+        ];
+
+        function searchProducts() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = ""; // 기존 결과 초기화
+
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchInput)
+            );
+
+            if (filteredProducts.length === 0) {
+                resultsContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
+                return;
+            }
+
+            const grid = document.createElement('div');
+            grid.className = 'grid';
+
+            filteredProducts.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'item';
+
+                item.innerHTML = `
+                    <img src="${product.img}" alt="${product.name}" onclick="goToDetailPage(${product.id})">
+                    <h3>${product.name}</h3>
+                    <p>${product.price}</p>
+                    <button>장바구니</button>
+                `;
+                grid.appendChild(item);
+            });
+
+            resultsContainer.appendChild(grid);
+        }
+
+        function goToDetailPage(productId) {
+            alert(`상품 ID: ${productId}의 상세 페이지로 이동합니다.`); // 실제로는 상세 페이지 URL로 이동
+        }
+    </script>
 </head>
 <body>
-    
     <div class="header">
-        <!-- 로고를 클릭하면 메인ㅁ 페이지로 이동 -->
         <div class="logo" onclick="location.href='index.html'">WED</div>
-        <!-- 동적으로 생성되는 카테고리 메뉴 -->
         <div class="menu" id="menu"></div>
         <div class="user-options">
-            <!-- '문의하기' 페이지로 이동 -->
             <div class="inquiry" onclick="location.href='inquiry.html'">문의하기</div>
-            <!-- 로그인 및 회원가입 버튼 -->
             <div class="login-signup">
                 <span onclick="location.href='login.html'">로그인</span>
                 <span class="separator"></span>
@@ -25,13 +117,12 @@
         </div>
     </div>
 
-    <!-- 검색 콘텐츠 -->
     <div class="search-container">
         <h2>검색하기</h2>
-        <!-- 검색어 입력 필드 -->
         <input type="text" id="search-input" placeholder="검색어를 입력하세요...">
-        <!-- 검색 버튼 -->
         <button onclick="searchProducts()">검색</button>
-        <!-- 검색 결과를 표시하는 영역 -->
         <div id="search-results"></div>
-   
+    </div>
+</body>
+</html>
+

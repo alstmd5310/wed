@@ -1,83 +1,69 @@
 <%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
-<%@ page import="org.json.JSONObject" %>
+<%@ page import="java.util.*, java.io.*, java.sql.*, org.apache.commons.fileupload.*, org.apache.commons.fileupload.disk.*, org.apache.commons.fileupload.servlet.*" %>
+
 <%
-    response.setContentType("application/json; charset=UTF-8");
-    JSONObject responseJson = new JSONObject();
-    Connection conn = null;
-    PreparedStatement pstmt = null;
+    // 초기 변수 설정
+    String id = null, name = null, address = null, newPassword = null;
+    boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
     try {
-        String userId = request.getParameter("id");
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String newPassword = request.getParameter("newPassword");
+        if (isMultipart) {
+            // Multipart 요청 처리
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            List<FileItem> items = upload.parseRequest(request);
 
-        // 디버깅 출력
-        System.out.println("Received Parameters:");
-        System.out.println("User ID: " + userId);
-        System.out.println("Name: " + name);
-        System.out.println("Address: " + address);
-        System.out.println("New Password: " + newPassword);
+            for (FileItem item : items) {
+                if (item.isFormField()) {
+                    String fieldName = item.getFieldName();
+                    String fieldValue = item.getString("UTF-8"); // UTF-8로 디코딩
 
-        // 비밀번호가 비어있을 경우 기존 비밀번호 유지
-        if (newPassword == null || newPassword.trim().isEmpty()) {
-            String selectSql = "SELECT member_password FROM members WHERE member_id = ?";
-            pstmt = conn.prepareStatement(selectSql);
-            pstmt.setInt(1, Integer.parseInt(userId));
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                newPassword = rs.getString("member_password");
+                    System.out.println("Received field: " + fieldName + " = " + fieldValue);
+
+                    if ("id".equals(fieldName)) id = fieldValue;
+                    if ("name".equals(fieldName)) name = fieldValue;
+                    if ("address".equals(fieldName)) address = fieldValue;
+                    if ("newPassword".equals(fieldName)) newPassword = fieldValue;
+                }
             }
-            rs.close();
-            pstmt.close();
+        } else {
+            // x-www-form-urlencoded 요청 처리
+            id = request.getParameter("id");
+            name = request.getParameter("name");
+            address = request.getParameter("address");
+            newPassword = request.getParameter("newPassword");
+
+            System.out.println("id: " + id + ", name: " + name + ", address: " + address + ", newPassword: " + newPassword);
         }
 
         // 데이터베이스 연결
         Class.forName("com.mysql.cj.jdbc.Driver");
-        conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/members?useUnicode=true&characterEncoding=utf8",
-            "webuser",
-            "webpassword"
-        );
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourDatabase", "username", "password");
+        System.out.println("Database connected.");
 
-        if (conn == null) {
-            System.out.println("Database connection failed!");
-            responseJson.put("success", false);
-            responseJson.put("message", "Database connection failed!");
-            out.print(responseJson);
-            return;
-        }
+        // SQL 쿼리 실행
+        String sql = "UPDATE users SET name = ?, address = ?, password = ? WHERE id = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
 
-        // 사용자 정보 업데이트
-        String updateSql = "UPDATE members SET member_name = ?, member_address = ?, member_password = ? WHERE member_id = ?";
-        pstmt = conn.prepareStatement(updateSql);
         pstmt.setString(1, name);
         pstmt.setString(2, address);
         pstmt.setString(3, newPassword);
-        pstmt.setInt(4, Integer.parseInt(userId));
-
-        // SQL 실행 디버깅
-        System.out.println("Executing SQL: " + updateSql);
+        pstmt.setString(4, id);
 
         int rows = pstmt.executeUpdate();
-        System.out.println("Rows affected: " + rows);
+        System.out.println("Rows updated: " + rows);
 
         if (rows > 0) {
-            responseJson.put("success", true);
-            responseJson.put("message", "정보가 성공적으로 수정되었습니다.");
+            out.print("{\"success\":true, \"message\":\"Update successful\"}");
         } else {
-            responseJson.put("success", false);
-            responseJson.put("message", "정보 수정에 실패했습니다.");
+            out.print("{\"success\":false, \"message\":\"No rows updated\"}");
         }
-    } catch (Exception e) {
-        responseJson.put("success", false);
-        responseJson.put("message", "서버 오류 발생: " + e.getMessage());
-        e.printStackTrace(); // 디버깅 로그
-    } finally {
-        if (pstmt != null) try { pstmt.close(); } catch (Exception e) {}
-        if (conn != null) try { conn.close(); } catch (Exception e) {}
-    }
 
-    out.print(responseJson);
+        pstmt.close();
+        conn.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+        response.setContentType("application/json");
+        out.print("{\"success\":false, \"message\":\"" + e.getMessage() + "\"}");
+    }
 %>

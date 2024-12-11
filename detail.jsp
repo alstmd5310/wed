@@ -38,7 +38,7 @@
 
             // 2. DB 연결
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/database_product", "shop_user", "spp2391");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/members", "webuser", "webpassword");
 
             // 3. SQL 쿼리 작성 (상품 상세 정보를 가져오는 쿼리)
             String sql = "SELECT name, price, description, image_url FROM products WHERE id = ?";
@@ -75,7 +75,7 @@
             <div class="product-info">
                 <h2><%= name %></h2>
                 <p class="price">₩<%= String.format("%,d", price) %></p>
-                <p><%= description %></p>
+                <p><%= description%></p>
             </div>
             <div class="buttons">
                 <!-- 결제 페이지로 이동하는 폼 -->
