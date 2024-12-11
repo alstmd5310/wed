@@ -49,14 +49,15 @@
                     // 3. 결과 출력
                     while (rs.next()) {
                         String name = rs.getString("name");
-                        String imageUrl = rs.getString("image_url");
+                        String imageUrl = rs.getString("image_url");  // image_url 값은 "images/top1.jpg" 와 같은 형식
                         int price = rs.getInt("price");
                         int id = rs.getInt("id");
             %>
                         <div class="item">
                             <!-- 상품 이미지 클릭 시 상세 페이지로 이동 -->
                             <a href="detail.jsp?id=<%= id %>">
-                                <img src="<%= imageUrl %>" alt="<%= name %>">
+                                <!-- DB에 저장된 image_url을 사용하여 이미지 표시 -->
+                                <img src="uploads/<%= imageUrl %>" alt="<%= name %>">
                             </a>
                             <h3><%= name %></h3>
                             <p>₩<%= String.format("%,d", price) %></p>
@@ -83,3 +84,4 @@
         </div>
     </div>
 </body>
+</html>

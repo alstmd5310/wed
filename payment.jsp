@@ -39,7 +39,8 @@
     <div class="container">
         <div class="payment-info">
             <h2>결제 정보</h2>
-            <img src="<%= productImageUrl %>" alt="<%= productName %>">
+            <!-- 이미지 경로 수정: uploads/ 디렉토리 경로 추가 -->
+            <img src="uploads/<%= productImageUrl %>" alt="<%= productName %>">
             <p><strong>상품명:</strong> <%= productName %></p>
             <p class="price">₩<%= String.format("%,d", productPrice) %></p>
 

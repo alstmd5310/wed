@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>신발 상품 목록</title>
+    <link rel="stylesheet" href="common.css"> <!-- 공통 CSS 파일 연결 -->
+    <title>악세서리 상품 목록</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f7f7f7; }
         .header { position: fixed; top: 0; left: 0; width: 100%; background-color: white; border-bottom: 1px solid black; z-index: 1000; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
@@ -23,11 +24,11 @@
 <body>
     <div class="header">
         <div class="logo" onclick="location.href='index.jsp'">WED</div>
-        <div>신발 상품 목록</div>
+        <div>악세서리 상품 목록</div>
     </div>
 
     <div class="content">
-        <h1>신발 상품 목록</h1>
+        <h1>악세서리 상품 목록</h1>
         <div class="grid">
             <%
                 Connection conn = null;
@@ -40,7 +41,7 @@
                     conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/database_product", "shop_user", "spp2391");
 
                     // 2. SQL 쿼리 작성 (상품과 카테고리 정보를 가져오는 쿼리)
-                    String sql = "SELECT id, name, price, image_url FROM products WHERE category = '신발'";  // 카테고리가 '신발'인 상품만 조회
+                    String sql = "SELECT id, name, price, image_url FROM products WHERE category = '악세서리'";  // 카테고리가 '하의'인 상품만 조회
 
                     pstmt = conn.prepareStatement(sql);
                     rs = pstmt.executeQuery();
@@ -48,14 +49,15 @@
                     // 3. 결과 출력
                     while (rs.next()) {
                         String name = rs.getString("name");
-                        String imageUrl = rs.getString("image_url");
+                        String imageUrl = rs.getString("image_url");  // image_url 값은 "images/top1.jpg" 와 같은 형식
                         int price = rs.getInt("price");
                         int id = rs.getInt("id");
             %>
                         <div class="item">
                             <!-- 상품 이미지 클릭 시 상세 페이지로 이동 -->
                             <a href="detail.jsp?id=<%= id %>">
-                                <img src="<%= imageUrl %>" alt="<%= name %>">
+                                <!-- DB에 저장된 image_url을 사용하여 이미지 표시 -->
+                                <img src="uploads/<%= imageUrl %>" alt="<%= name %>">
                             </a>
                             <h3><%= name %></h3>
                             <p>₩<%= String.format("%,d", price) %></p>
@@ -82,3 +84,4 @@
         </div>
     </div>
 </body>
+</html>

@@ -10,7 +10,7 @@
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f9f9f9; }
         .container { display: flex; width: 80%; max-width: 1200px; background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 10px; overflow: hidden; }
         .left { flex: 2; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f4f4f4; }
-        .left img { max-width: 100%; height: auto; border-radius: 8px; }
+        .left img { max-width: 70%; height: auto; border-radius: 8px; }
         .right { flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
         .product-info h2 { margin: 0; color: #333; }
         .price { color: #e74c3c; font-weight: bold; font-size: 1.5rem; }
@@ -68,7 +68,8 @@
 
     <div class="container">
         <div class="left">
-            <img src="<%= imageUrl %>" alt="<%= name %>">
+            <!-- 이미지 경로 수정: uploads/ 경로를 추가 -->
+            <img src="uploads/<%= imageUrl %>" alt="<%= name %>">
         </div>
         <div class="right">
             <div class="product-info">
