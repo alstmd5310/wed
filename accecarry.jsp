@@ -27,7 +27,7 @@
     </div>
 
     <div class="content">
-        <h1>상의 상품 목록</h1>
+        <h1>악세서리 상품 목록</h1>
         <div class="grid">
             <%
                 Connection conn = null;
