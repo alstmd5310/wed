@@ -14,8 +14,9 @@
         .right { flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
         .product-info h2 { margin: 0; color: #333; }
         .price { color: #e74c3c; font-weight: bold; font-size: 1.5rem; }
-        .buttons button { padding: 10px; font-size: 16px; border: 2px solid #333; background-color: white; cursor: pointer; border-radius: 5px; transition: background-color 0.3s, color 0.3s; }
+        .buttons button { padding: 10px; font-size: 16px; border: 2px solid #333; background-color: white; cursor: pointer; border-radius: 5px; transition: background-color 0.3s, color 0.3s; margin-right: 10px; }
         .buttons button:hover { background-color: #333; color: white; }
+        .navigation-buttons { margin-top: 20px; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
@@ -77,13 +78,17 @@
             </div>
             <div class="buttons">
                 <!-- 결제 페이지로 이동하는 폼 -->
-                <form action="payment.jsp" method="post">
+                <form action="payment.jsp" method="post" style="margin-bottom: 10px;">
                     <input type="hidden" name="product_id" value="<%= productId %>">
                     <input type="hidden" name="product_name" value="<%= name %>">
                     <input type="hidden" name="product_price" value="<%= price %>">
                     <input type="hidden" name="product_image_url" value="<%= imageUrl %>">
                     <button type="submit">결제하기</button>
                 </form>
+            </div>
+            <div class="navigation-buttons">
+                <button onclick="history.back()">뒤로가기</button>
+                <button onclick="location.href='index.html'">메인 페이지로</button>
             </div>
         </div>
     </div>
