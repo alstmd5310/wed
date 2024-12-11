@@ -5,17 +5,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>신발 상품 목록</title>
     <link rel="stylesheet" href="common.css">
     <script src="common.js" defer></script>
+    <title>신발 상품 목록</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f7f7f7; }
         .header { position: fixed; top: 0; left: 0; width: 100%; background-color: white; border-bottom: 1px solid black; z-index: 1000; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         .header .logo { font-size: 24px; font-weight: bold; cursor: pointer; }
-        .menu { display: flex; gap: 20px; }
-        .menu a { text-decoration: none; color: black; font-size: 16px; }
-        .search-container { display: flex; justify-content: flex-end; padding: 10px 40px; }
-        .search-bar { border: 1px solid black; padding: 10px; width: 100%; max-width: 400px; }
         .content { margin: 100px auto 0; width: 80%; max-width: 1200px; text-align: center; }
         .grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 40px; }
         .item { border: 1px solid black; border-radius: 5px; width: 250px; padding: 20px; background-color: white; text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
@@ -27,15 +23,13 @@
     </style>
 </head>
 <body>
-    <!-- 상단 고정 헤더 -->
     <div class="header">
-        <div class="logo" onclick="location.href='index.jsp'">WED</div>
-        <div class="menu">
+        <div class="logo" onclick="location.href='index.html'">WED</div>    
+        <div class="menu" id="menu">
             <a href="clothes.jsp">상의</a>
             <a href="pants.jsp">하의</a>
             <a href="shoes.jsp">신발</a>
-            <a href="accecarry.jsp">악세서리</a>
-        </div>
+            <a href="accecarry.jsp">악세서리</a></div>
         <div class="user-options">
             <div class="inquiry">문의하기</div>
             <div class="login-signup" id="loginSection"></div>
@@ -44,37 +38,30 @@
 
     <!-- 검색 영역 -->
     <div class="search-container">
-        <form action="clothes.jsp" method="get">
-            <input type="text" name="search" class="search-bar" placeholder="상품을 검색하세요">
-        </form>
+        <input type="text" class="search-bar" placeholder="검색">
+    </div>
+    <div class="list">
+        <div class="logo" onclick="location.href='index.jsp'">WED</div>
+        <div>신발 상품 목록</div>
     </div>
 
-    <!-- 상품 목록 -->
     <div class="content">
-        <h1>신발상품 목록</h1>
+        <h1>신발 상품 목록</h1>
         <div class="grid">
             <%
                 Connection conn = null;
                 PreparedStatement pstmt = null;
                 ResultSet rs = null;
-                String searchQuery = request.getParameter("search");  // 검색어를 받아옵니다.
 
                 try {
                     // 1. DB 연결
                     Class.forName("com.mysql.cj.jdbc.Driver");
                     conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/members", "webuser", "webpassword");
 
-                    // 2. SQL 쿼리 작성 (검색어가 있는 경우와 없는 경우 처리)
-                    String sql;
-                    if (searchQuery != null && !searchQuery.isEmpty()) {
-                        sql = "SELECT id, name, price, image_url FROM products WHERE category = '신발' AND name LIKE ?";
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.setString(1, "%" + searchQuery + "%");  // 검색어로 상품명 LIKE 조건 추가
-                    } else {
-                        sql = "SELECT id, name, price, image_url FROM products WHERE category = '상의'";
-                        pstmt = conn.prepareStatement(sql);
-                    }
+                    // 2. SQL 쿼리 작성 (상품과 카테고리 정보를 가져오는 쿼리)
+                    String sql = "SELECT id, name, price, image_url FROM products WHERE category = '신발'";  // 카테고리가 '하의'인 상품만 조회
 
+                    pstmt = conn.prepareStatement(sql);
                     rs = pstmt.executeQuery();
 
                     // 3. 결과 출력

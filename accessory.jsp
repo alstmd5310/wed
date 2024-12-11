@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="common.css"> <!-- 공통 CSS 파일 연결 -->
+    <link rel="stylesheet" href="common.css">
+    <script src="common.js" defer></script>
     <title>악세서리 상품 목록</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f7f7f7; }
@@ -23,6 +24,24 @@
 </head>
 <body>
     <div class="header">
+        <div class="logo" onclick="location.href='index.html'">WED</div>    
+        <div class="menu" id="menu">
+            <a href="clothes.jsp">상의</a>
+            <a href="pants.jsp">하의</a>
+            <a href="shoes.jsp">신발</a>
+            <a href="accecarry.jsp">악세서리</a></div>
+        <div class="user-options">
+            <div class="inquiry">문의하기</div>
+            <div class="login-signup" id="loginSection"></div>
+        </div>
+    </div>
+
+    <!-- 검색 영역 -->
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="검색">
+    </div>
+
+    <div class="list">
         <div class="logo" onclick="location.href='index.jsp'">WED</div>
         <div>악세서리 상품 목록</div>
     </div>
