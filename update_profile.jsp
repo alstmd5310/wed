@@ -1,69 +1,59 @@
-<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*, java.io.*, java.sql.*, org.apache.commons.fileupload.*, org.apache.commons.fileupload.disk.*, org.apache.commons.fileupload.servlet.*" %>
-
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="org.json.JSONObject" %>
 <%
-    // 초기 변수 설정
-    String id = null, name = null, address = null, newPassword = null;
-    boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+    request.setCharacterEncoding("UTF-8"); // UTF-8 설정 추가
+    JSONObject jsonResponse = new JSONObject();
+
+    String dbUrl = "jdbc:mysql://localhost:3306/members?useUnicode=true&characterEncoding=utf8";
+    String dbUser = "webuser";
+    String dbPassword = "webpassword";
 
     try {
-        if (isMultipart) {
-            // Multipart 요청 처리
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            List<FileItem> items = upload.parseRequest(request);
+        String id = request.getParameter("id");
+        String email = request.getParameter("email");
+        String name = request.getParameter("name");
+        String address = request.getParameter("address");
+        String newPassword = request.getParameter("newPassword");
 
-            for (FileItem item : items) {
-                if (item.isFormField()) {
-                    String fieldName = item.getFieldName();
-                    String fieldValue = item.getString("UTF-8"); // UTF-8로 디코딩
+        System.out.println("ID: " + id);
+        System.out.println("Email: " + email);
+        System.out.println("Name: " + name);
+        System.out.println("Address: " + address);
+        System.out.println("New Password: " + newPassword);
 
-                    System.out.println("Received field: " + fieldName + " = " + fieldValue);
+        if (id == null || id.isEmpty()) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "ID parameter is missing.");
+        } else {
+            Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            String sql = "UPDATE members SET member_email = ?, member_name = ?, member_address = ?, member_password = ? WHERE member_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            pstmt.setString(2, name);
+            pstmt.setString(3, address);
+            pstmt.setString(4, newPassword);
+            pstmt.setString(5, id);
 
-                    if ("id".equals(fieldName)) id = fieldValue;
-                    if ("name".equals(fieldName)) name = fieldValue;
-                    if ("address".equals(fieldName)) address = fieldValue;
-                    if ("newPassword".equals(fieldName)) newPassword = fieldValue;
-                }
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                jsonResponse.put("success", true);
+                jsonResponse.put("message", "Profile updated successfully.");
+            } else {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "No matching record found for the provided ID.");
             }
-        } else {
-            // x-www-form-urlencoded 요청 처리
-            id = request.getParameter("id");
-            name = request.getParameter("name");
-            address = request.getParameter("address");
-            newPassword = request.getParameter("newPassword");
 
-            System.out.println("id: " + id + ", name: " + name + ", address: " + address + ", newPassword: " + newPassword);
+            pstmt.close();
+            conn.close();
         }
-
-        // 데이터베이스 연결
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourDatabase", "username", "password");
-        System.out.println("Database connected.");
-
-        // SQL 쿼리 실행
-        String sql = "UPDATE users SET name = ?, address = ?, password = ? WHERE id = ?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-
-        pstmt.setString(1, name);
-        pstmt.setString(2, address);
-        pstmt.setString(3, newPassword);
-        pstmt.setString(4, id);
-
-        int rows = pstmt.executeUpdate();
-        System.out.println("Rows updated: " + rows);
-
-        if (rows > 0) {
-            out.print("{\"success\":true, \"message\":\"Update successful\"}");
-        } else {
-            out.print("{\"success\":false, \"message\":\"No rows updated\"}");
-        }
-
-        pstmt.close();
-        conn.close();
     } catch (Exception e) {
         e.printStackTrace();
-        response.setContentType("application/json");
-        out.print("{\"success\":false, \"message\":\"" + e.getMessage() + "\"}");
+        jsonResponse.put("success", false);
+        jsonResponse.put("message", "Error updating profile: " + e.getMessage());
     }
+
+    out.print(jsonResponse.toString());
 %>

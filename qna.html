@@ -1,101 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>문의 게시판</title>
- <link rel="stylesheet" href="common.css">
-  <style>
-    body { font-family: Arial, sans-serif; }
-    .inquiry-item { margin-bottom: 20px; border: 1px solid #ddd; padding: 10px; }
-    .inquiry-item p { margin: 5px 0; }
-    #inquiry-form { margin: 20px 0; }
-    textarea { width: 100%; height: 100px; margin-bottom: 10px; }
-    button { padding: 10px 15px; background-color: #007BFF; color: white; border: none; cursor: pointer; }
-    button:hover { background-color: #0056b3; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의 게시판</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .inquiry-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .inquiry-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-field, .textarea-field {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .submit-btn {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .inquiry-list {
+            margin-top: 30px;
+        }
+        .inquiry-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>문의 게시판</h1>
-  </header>
+    <div class="inquiry-container">
+        <h2>문의하기</h2>
+        <form id="inquiryForm" class="inquiry-form">
+            <input type="text" id="inquiryTitle" class="input-field" placeholder="제목">
+            <textarea id="inquiryContent" class="textarea-field" rows="5" placeholder="내용"></textarea>
+            <button type="button" onclick="submitInquiry()" class="submit-btn">문의 등록</button>
+        </form>
+        <div class="inquiry-list" id="inquiryList"></div>
+    </div>
+    <script>
+        async function submitInquiry() {
+            const title = document.getElementById("inquiryTitle").value;
+            const content = document.getElementById("inquiryContent").value;
 
-  <!-- 로그인 상태 확인 영역 -->
-  <section id="login-check"></section>
+            if (!title || !content) {
+                alert("제목과 내용을 입력해주세요.");
+                return;
+            }
 
-  <!-- 문의 작성 폼 -->
-  <section id="inquiry-form" style="display: none;">
-    <textarea id="inquiry-text" placeholder="문의 내용을 입력하세요."></textarea>
-    <button onclick="submitInquiry()">문의하기</button>
-  </section>
+            try {
+                const response = await fetch('/inquiry.jsp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content })
+                });
 
-  <!-- 문의 리스트 -->
-  <section id="inquiries"></section>
+                const data = await response.json();
+                if (data.success) {
+                    alert("문의가 등록되었습니다!");
+                    location.reload();
+                } else {
+                    alert("문의 등록에 실패했습니다: " + data.message);
+                }
+            } catch (error) {
+                alert("서버 오류가 발생했습니다.");
+                console.error(error);
+            }
+        }
 
-  <script>
-    // 로그인 상태 확인
-    async function checkLoginStatus() {
-      const response = await fetch('/auth/checkLogin.jsp');
-      const result = await response.json();
-      const loginCheck = document.getElementById('login-check');
-      const inquiryForm = document.getElementById('inquiry-form');
+        async function loadInquiries() {
+            try {
+                const response = await fetch('/load_inquiries.jsp');
+                const data = await response.json();
 
-      if (result.loggedIn) {
-        loginCheck.innerHTML = `<p>안녕하세요, ${result.username}님!</p>`;
-        inquiryForm.style.display = 'block';
-      } else {
-        loginCheck.innerHTML = `
-          <p>로그인 후 문의 게시판을 이용할 수 있습니다.</p>
-          <a href="/login.jsp">로그인</a>
-        `;
-        inquiryForm.style.display = 'none';
-      }
-    }
+                const listContainer = document.getElementById("inquiryList");
+                listContainer.innerHTML = data.inquiries.map(inquiry => `
+                    <div class="inquiry-item">
+                        <h3>${inquiry.title}</h3>
+                        <p>${inquiry.content}</p>
+                        <p class="timestamp">등록 시간: ${inquiry.created_at}</p>
+                        ${inquiry.answered_at ? `<p class="timestamp">답변 시간: ${inquiry.answered_at}</p>` : ""}
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error("문의 목록을 로드하는 중 오류 발생:", error);
+            }
+        }
 
-    // 문의 등록
-    async function submitInquiry() {
-      const text = document.getElementById('inquiry-text').value;
-
-      const response = await fetch('/inquiry/submitInquiry.jsp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        alert('문의가 등록되었습니다.');
         loadInquiries();
-      } else {
-        alert(result.message || '문의 등록에 실패했습니다.');
-      }
-    }
-
-    // 문의 리스트 로드
-    async function loadInquiries() {
-      const response = await fetch('/inquiry/getInquiries.jsp');
-      const inquiries = await response.json();
-      const inquiriesDiv = document.getElementById('inquiries');
-
-      inquiriesDiv.innerHTML = '';
-      inquiries.forEach(inquiry => {
-        const div = document.createElement('div');
-        div.className = 'inquiry-item';
-        div.innerHTML = `
-          <p><strong>문의 내용:</strong> ${inquiry.text}</p>
-          <p><strong>등록 시간:</strong> ${inquiry.created_at}</p>
-          <p>${inquiry.answer ? `<strong>답변:</strong> ${inquiry.answer}` : '<strong>답변:</strong> 답변 대기 중'}</p>
-          <p>${inquiry.answer_at ? `<strong>답변 등록 시간:</strong> ${inquiry.answer_at}` : ''}</p>
-        `;
-        inquiriesDiv.appendChild(div);
-      });
-    }
-
-    // 초기 실행
-    window.onload = () => {
-      checkLoginStatus();
-      loadInquiries();
-    };
-  </script>
+    </script>
 </body>
-</html>
+</html> 
