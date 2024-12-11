@@ -38,10 +38,10 @@
                 try {
                     // 1. DB 연결
                     Class.forName("com.mysql.cj.jdbc.Driver");
-                    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/database_product", "shop_user", "spp2391");
+                    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/members", "webuser", "webpassword");
 
                     // 2. SQL 쿼리 작성 (상품과 카테고리 정보를 가져오는 쿼리)
-                    String sql = "SELECT id, name, price, image_url FROM products WHERE category = '하의'";  // 카테고리가 '하의'인 상품만 조회
+                    String sql = "SELECT id, name, price, image_url FROM products WHERE category = '하의'";  // 카테고리가 '상의'인 상품만 조회
 
                     pstmt = conn.prepareStatement(sql);
                     rs = pstmt.executeQuery();
