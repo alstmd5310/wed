@@ -1,4 +1,3 @@
-//장바구니 html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,6 +6,7 @@
     <title>장바구니</title>
     <link rel="stylesheet" href="common.css">
     <style>
+        /* 장바구니 컨테이너 스타일 */
         .cart-container {
             max-width: 800px;
             margin: 50px auto;
@@ -15,6 +15,7 @@
             border-radius: 10px;
             background-color: #f9f9f9;
         }
+        /* 장바구니 아이템 스타일 */
         .cart-item {
             display: flex;
             justify-content: space-between;
@@ -23,6 +24,7 @@
         .cart-item div {
             flex: 1;
         }
+        /* 삭제 버튼 스타일 */
         .remove-btn {
             padding: 5px;
             background-color: red;
@@ -34,47 +36,53 @@
     </style>
 </head>
 <body>
+    <!-- 장바구니 컨테이너 -->
     <div class="cart-container">
         <h2>장바구니</h2>
+        <!-- 장바구니 항목이 렌더링될 영역 -->
         <div id="cartItems"></div>
     </div>
     <script>
+        // 장바구니 데이터를 불러오는 함수
         async function loadCart() {
-            const response = await fetch('/cart.jsp');
-            const data = await response.json();
+            const response = await fetch('/cart.jsp'); // 장바구니 데이터를 요청
+            const data = await response.json(); // JSON 데이터로 변환
 
-            const cartItems = document.getElementById("cartItems");
-            cartItems.innerHTML = "";
+            const cartItems = document.getElementById("cartItems"); // 장바구니 항목을 표시할 div
+            cartItems.innerHTML = ""; // 기존 내용 초기화
 
+            // 각 장바구니 항목을 HTML로 생성 및 추가
             data.items.forEach(item => {
                 const div = document.createElement("div");
                 div.className = "cart-item";
                 div.innerHTML = `
-                    <div>${item.name}</div>
-                    <div>${item.price}원</div>
-                    <div>${item.quantity}개</div>
-                    <button class="remove-btn" onclick="removeFromCart(${item.id})">삭제</button>
+                    <div>${item.name}</div> <!-- 상품 이름 -->
+                    <div>${item.price}원</div> <!-- 상품 가격 -->
+                    <div>${item.quantity}개</div> <!-- 상품 수량 -->
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})">삭제</button> <!-- 삭제 버튼 -->
                 `;
-                cartItems.appendChild(div);
+                cartItems.appendChild(div); // 항목 추가
             });
         }
 
+        // 장바구니에서 항목을 삭제하는 함수
         async function removeFromCart(cartId) {
             const response = await fetch('/cart.jsp', {
-                method: 'DELETE',
+                method: 'DELETE', // 삭제 요청
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cartId })
+                body: JSON.stringify({ cartId }) // 삭제할 항목 ID 전달
             });
 
-            const data = await response.json();
+            const data = await response.json(); // 응답 데이터 처리
             if (data.success) {
-                alert("삭제되었습니다.");
-                loadCart();
+                alert("삭제되었습니다."); // 성공 메시지
+                loadCart(); // 장바구니 새로고침
             } else {
-                alert("삭제 실패: " + data.message);
+                alert("삭제 실패: " + data.message); // 실패 메시지
             }
         }
 
+        // 페이지 로드 시 장바구니 데이터 불러오기
         loadCart();
     </script>
 </body>

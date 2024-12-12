@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 페이지</title>
-    <link rel="stylesheet" href="common.css">
-    <script src="common.js" defer></script>
+    <link rel="stylesheet" href="common.css"> <!-- 공통 스타일 -->
+    <script src="common.js" defer></script> <!-- 공통 스크립트 -->
 </head>
 <body>
+    <!-- 헤더 -->
     <div class="header">
-        <div class="logo" onclick="location.href='index.html'">WED</div>    
+        <div class="logo" onclick="location.href='index.html'">WED</div> <!-- 로고 클릭 시 메인 페이지로 이동 -->
         <div class="menu">
+            <!-- 카테고리 메뉴 -->
             <div><a href="clothes.jsp">상의</a></div>
             <div><a href="pants.jsp">하의</a></div>
             <div><a href="shoes.jsp">신발</a></div>
             <div><a href="accessory.jsp">악세서리</a></div>
         </div>
         <div class="user-options">
+            <!-- 사용자 옵션 -->
             <div class="inquiry">
                 <a href="qna.html">문의하기</a>
             </div>
@@ -24,20 +27,29 @@
         </div>
     </div>
 
+    <!-- 회원가입 컨테이너 -->
     <div class="signup-container">
         <h2>회원가입</h2>
         <form id="signupForm">
+            <!-- 이메일 입력 -->
             <input type="email" id="email" class="input-field" placeholder="이메일" required>
+            <!-- 비밀번호 입력 -->
             <input type="password" id="password" class="input-field" placeholder="비밀번호" required>
+            <!-- 비밀번호 확인 -->
             <input type="password" id="confirmPassword" class="input-field" placeholder="비밀번호 확인" required>
+            <!-- 이름 입력 -->
             <input type="text" id="name" class="input-field" placeholder="이름" required>
+            <!-- 주소 입력 -->
             <input type="text" id="address" class="input-field" placeholder="주소" required>
+            <!-- 회원가입 버튼 -->
             <button type="button" onclick="signUp()" class="signup-btn">회원가입</button>
+            <!-- 로그인 링크 -->
             <a href="login.html" class="login-link">이미 계정이 있으신가요? 로그인하기</a>
         </form>
     </div>
 
     <style>
+        /* 기본적인 body 스타일 */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -46,6 +58,7 @@
             flex-direction: column;
             align-items: center;
         }
+        /* 헤더 스타일 */
         .header {
             position: fixed;
             top: 0;
@@ -79,6 +92,7 @@
             display: flex;
             gap: 15px;
         }
+        /* 회원가입 컨테이너 스타일 */
         .signup-container {
             position: fixed;
             top: 50%;
@@ -92,6 +106,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
+        /* 입력 필드 스타일 */
         .input-field {
             width: 100%;
             padding: 15px;
@@ -99,6 +114,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        /* 회원가입 버튼 스타일 */
         .signup-btn {
             width: 100%;
             padding: 15px;
@@ -111,6 +127,7 @@
         .signup-btn:hover {
             background-color: #45a049;
         }
+        /* 로그인 링크 스타일 */
         .login-link {
             margin-top: 15px;
             display: block;
@@ -120,49 +137,53 @@
     </style>
 
     <script>
-   async function signUp() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
-    const name = document.getElementById("name").value;
-    const address = document.getElementById("address").value;
+        // 회원가입 처리 함수
+        async function signUp() {
+            // 입력된 값 가져오기
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            const name = document.getElementById("name").value;
+            const address = document.getElementById("address").value;
 
-    if (!email || !password || !confirmPassword || !name || !address) {
-        alert("모든 필드를 입력해주세요.");
-        return;
-    }
+            // 입력값 유효성 검사
+            if (!email || !password || !confirmPassword || !name || !address) {
+                alert("모든 필드를 입력해주세요.");
+                return;
+            }
 
-    if (password !== confirmPassword) {
-        alert("비밀번호가 일치하지 않습니다.");
-        return;
-    }
+            if (password !== confirmPassword) {
+                alert("비밀번호가 일치하지 않습니다.");
+                return;
+            }
 
-    try {
-        const response = await fetch('/signup.jsp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-                name: name,
-                address: address,
-            }),
-        });
+            try {
+                // 회원가입 요청
+                const response = await fetch('/signup.jsp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        name: name,
+                        address: address,
+                    }),
+                });
 
-        const data = await response.json(); // JSON 응답 처리
-        if (data.success) {
-            alert(data.message);
-            window.location.href = "login.html"; // 성공 시 로그인 페이지로 이동
-        } else {
-            alert(`회원가입 오류: ${data.message}`);
+                const data = await response.json(); // JSON 응답 처리
+                if (data.success) {
+                    alert(data.message); // 성공 메시지 표시
+                    window.location.href = "login.html"; // 성공 시 로그인 페이지로 이동
+                } else {
+                    alert(`회원가입 오류: ${data.message}`); // 오류 메시지 표시
+                }
+            } catch (error) {
+                alert("회원가입 처리 중 오류가 발생했습니다."); // 처리 중 오류 메시지
+                console.error(error);
+            }
         }
-    } catch (error) {
-        alert("회원가입 처리 중 오류가 발생했습니다.");
-        console.error(error);
-    }
-}
     </script>
 </body>
 </html>

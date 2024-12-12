@@ -10,12 +10,14 @@
     <meta charset="UTF-8">
     <title>장바구니</title>
     <style>
+        /* 기본 스타일 설정 */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f7f7f7;
         }
+        /* 헤더 스타일 */
         .header {
             position: fixed;
             top: 0;
@@ -29,12 +31,14 @@
             justify-content: space-between;
             align-items: center;
         }
+        /* 본문 콘텐츠 스타일 */
         .content {
             margin: 100px auto 0;
             width: 80%;
             max-width: 1200px;
             text-align: center;
         }
+        /* 장바구니 아이템 스타일 */
         .cart-item {
             display: flex;
             align-items: center;
@@ -78,6 +82,7 @@
         .cart-item button:hover {
             background-color: #444;
         }
+        /* 홈으로 돌아가기 버튼 스타일 */
         .go-back-button {
             margin-top: 30px;
             padding: 10px 20px;
@@ -94,6 +99,7 @@
     </style>
 </head>
 <body>
+    <!-- 헤더 -->
     <div class="header">
         <div class="logo" onclick="location.href='index.html'">WED</div>
         <div class="menu" id="menu">
@@ -104,6 +110,7 @@
         </div>
     </div>
 
+    <!-- 본문 콘텐츠 -->
     <div class="content">
         <h1>장바구니</h1>
 
@@ -115,32 +122,33 @@
             List<Map<String, Object>> cart = (List<Map<String, Object>>) session.getAttribute("cart");
             if (cart == null || cart.isEmpty()) {
         %>
-            <p>장바구니가 비어 있습니다.</p>
+            <p>장바구니가 비어 있습니다.</p> <!-- 비어 있는 경우 메시지 출력 -->
         <%
             } else {
         %>
             <%-- 장바구니 내용 출력 --%>
             <div>
                 <%
-                    int total = 0;
+                    int total = 0; // 총 합계 변수 초기화
                     for (Map<String, Object> item : cart) {
-                        String name = (String) item.get("name");
-                        int price = (int) item.get("price");
-                        String imageUrl = (String) item.get("image_url");  // 이미지 URL 추가
-                        total += price;
+                        String name = (String) item.get("name"); // 상품 이름 가져오기
+                        int price = (int) item.get("price"); // 상품 가격 가져오기
+                        String imageUrl = (String) item.get("image_url"); // 이미지 URL 가져오기
+                        total += price; // 총 합계 계산
                 %>
                     <div class="cart-item">
-                        <img src="uploads/<%= imageUrl %>" alt="<%= name %>">
+                        <img src="uploads/<%= imageUrl %>" alt="<%= name %>"> <!-- 상품 이미지 -->
                         <div class="info">
-                            <h3><%= name %></h3>
-                            <p>₩<%= String.format("%,d", price) %></p>
+                            <h3><%= name %></h3> <!-- 상품 이름 -->
+                            <p>₩<%= String.format("%,d", price) %></p> <!-- 상품 가격 -->
                         </div>
                         <div class="actions">
+                            <!-- 구매하기 폼 -->
                             <form action="payment.jsp" method="post">
-                                <input type="hidden" name="product_id" value="<%= item.get("id") %>">
-                                <input type="hidden" name="product_name" value="<%= name %>">
-                                <input type="hidden" name="product_price" value="<%= price %>">
-                                <button type="submit">구매하기</button>
+                                <input type="hidden" name="product_id" value="<%= item.get("id") %>"> <!-- 상품 ID -->
+                                <input type="hidden" name="product_name" value="<%= name %>"> <!-- 상품 이름 -->
+                                <input type="hidden" name="product_price" value="<%= price %>"> <!-- 상품 가격 -->
+                                <button type="submit">구매하기</button> <!-- 구매 버튼 -->
                             </form>
                         </div>
                     </div>
@@ -148,15 +156,14 @@
                     }
                 %>
             </div>
-            <p>총 합계: ₩<%= String.format("%,d", total) %></p>
+            <p>총 합계: ₩<%= String.format("%,d", total) %></p> <!-- 총 합계 출력 -->
         <%
             }
         %>
-        <!-- 돌아가기 버튼 -->
+        <!-- 홈으로 돌아가기 버튼 -->
         <form action="index.html">
             <button class="go-back-button" type="submit">홈으로 돌아가기</button>
         </form>
     </div>
 </body>
 </html>
-
