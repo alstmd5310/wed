@@ -7,53 +7,32 @@
     <link rel="stylesheet" href="common.css">
     <script src="common.js" defer></script>
     <style>
-        .search-container {
-            display: flex;
-            justify-content: flex-end;
-            padding: 20px 40px;
-            margin-top: 100px;
-        }
-
+ body.index-page .content {
+    display: flex;
+    padding: 40px;
+    gap: 40px;
+    justify-content: center;
+    margin-top: 20px;
+    background-image: url('/MAIN.png'); /* 루트 경로에 맞게 설정 */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
         .search-bar {
-            border: 1px solid black;
-            padding: 10px;
-            width: 100%;
-            max-width: 400px;
-        }
+    position: absolute;
+    top: 98px; /* 위치 조정 */
+    left: 91%;
+    transform: translateX(-50%); /* 가로 중앙 정렬 */
+    padding: 10px;
+    font-size: 16px;
+    width: 300px; /* 너비 조정 */
+}
 
-        .content {
-            display: flex;
-            padding: 40px;
-            gap: 40px;
-            justify-content: center;
-            margin-top: 20px;
-        }
+ /* index.html에만 적용되는 스타일 */
 
-        .popular-products {
-            display: flex;
-            gap: 30px;
-        }
+       
 
-        .popular-item {
-            border: 1px solid black;
-            width: 250px;
-            height: 400px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .popular-item::before {
-            content: "인기상품";
-            position: absolute;
-            top: -20px;
-            left: 20px;
-            padding: 5px;
-            border: 1px solid black;
-            border-radius: 10px;
-            background-color: white;
-        }
+       
     </style>
 </head>
 <body>
@@ -67,23 +46,24 @@
             <div><a href="accessory.jsp">악세서리</a></div>
         </div>
         <div class="user-options">
-            <div class="inquiry">문의하기</div>
+            <div class="inquiry">
+                <a href="qna.html">문의하기</a>
+            </div>
             <div class="login-signup" id="loginSection"></div>
         </div>
     </div>
 
     <!-- 검색 영역 -->
-    <div class="search-container">
+<div class="search-container">
+    <a href="search.html">
         <input type="text" class="search-bar" placeholder="검색">
-    </div>
+    </a>
+</div>
 
-    <!-- 메인 콘텐츠 영역 -->
-    <div class="content">
-        <div class="popular-products">
-            <div class="popular-item"></div>
-            <div class="popular-item"></div>
-            <div class="popular-item"></div>
-        </div>
-    </div>
+   <!-- 컨텐츠 영역 (배경 이미지 포함) -->
+   <div class="content">
+    <!-- 여기에 추가적인 내용이 들어갈 수 있습니다 -->
+</div>
+    
 </body>
 </html> 

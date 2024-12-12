@@ -25,21 +25,26 @@
 <body>
     <div class="header">
         <div class="logo" onclick="location.href='index.html'">WED</div>    
-        <div class="menu" id="menu">
-            <a href="clothes.jsp">상의</a>
-            <a href="pants.jsp">하의</a>
-            <a href="shoes.jsp">신발</a>
-            <a href="accecarry.jsp">악세서리</a></div>
+        <div class="menu">
+            <div><a href="clothes.jsp">상의</a></div>
+            <div><a href="pants.jsp">하의</a></div>
+            <div><a href="shoes.jsp">신발</a></div>
+            <div><a href="accessory.jsp">악세서리</a></div>
+        </div>
         <div class="user-options">
-            <div class="inquiry">문의하기</div>
+            <div class="inquiry">
+                <a href="qna.html">문의하기</a>
+            </div>
             <div class="login-signup" id="loginSection"></div>
         </div>
     </div>
 
     <!-- 검색 영역 -->
-    <div class="search-container">
+<div class="search-container">
+    <a href="search.html">
         <input type="text" class="search-bar" placeholder="검색">
-    </div>
+    </a>
+</div>
     <div class="list">
         <div class="logo" onclick="location.href='index.jsp'">WED</div>
         <div>신발 상품 목록</div>

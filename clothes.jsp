@@ -25,26 +25,26 @@
 <body>
     <div class="header">
         <div class="logo" onclick="location.href='index.html'">WED</div>    
-        <div class="menu" id="menu">
-            <a href="clothes.jsp">상의</a>
-            <a href="pants.jsp">하의</a>
-            <a href="shoes.jsp">신발</a>
-            <a href="accecarry.jsp">악세서리</a></div>
+        <div class="menu">
+            <div><a href="clothes.jsp">상의</a></div>
+            <div><a href="pants.jsp">하의</a></div>
+            <div><a href="shoes.jsp">신발</a></div>
+            <div><a href="accessory.jsp">악세서리</a></div>
+        </div>
         <div class="user-options">
-            <div class="inquiry">문의하기</div>
+            <div class="inquiry">
+                <a href="qna.html">문의하기</a>
+            </div>
             <div class="login-signup" id="loginSection"></div>
         </div>
     </div>
 
     <!-- 검색 영역 -->
-    <div class="search-container">
+<div class="search-container">
+    <a href="search.html">
         <input type="text" class="search-bar" placeholder="검색">
-    </div>
-    <div class="list">
-        <div class="logo" onclick="location.href='index.jsp'">WED</div>
-        <div>상의 상품 목록</div>
-    </div>
-
+    </a>
+</div>
     <div class="content">
         <h1>상의 상품 목록</h1>
         <div class="grid">
@@ -81,13 +81,12 @@
                             <p>₩<%= String.format("%,d", price) %></p>
                             <!-- 장바구니 버튼 클릭 시 cart.jsp로 이동 -->
                             <!-- 장바구니 추가 폼 -->
-                        <form action="addToCart.jsp" method="post">
-                            <input type="hidden" name="product_id" value="<%= id %>">
-                            <input type="hidden" name="product_name" value="<%= name %>">
-                            <input type="hidden" name="product_price" value="<%= price %>">
-                           
-                            <button type="submit">장바구니 추가</button>
-                        </form>
+                            <form action="addToCart.jsp" method="post">
+                                <input type="hidden" name="product_id" value="<%= id %>">
+                                <input type="hidden" name="product_name" value="<%= name %>">
+                                <input type="hidden" name="product_price" value="<%= price %>">
+                                <button type="submit">장바구니 추가</button>
+                            </form>
                         </div>
             <%
                     }

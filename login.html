@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인 페이지</title>
     <link rel="stylesheet" href="common.css">
+    <script src="common.js" defer></script>
+
     <!-- 로그인 페이지 고유 스타일 -->
     <style>
         .login-container {
@@ -100,26 +102,19 @@
     </style>
 </head>
 <body>
-    <!-- 고정된 카테고리 줄 -->
-    <!-- 상단 고정 헤더 -->
     <div class="header">
-        <!-- 로고 영역 - 클릭 시 메인 페이지로 이동 -->
-        <div class="logo" onclick="location.href='index.html'">WED</div>
-        <!-- 카테고리 메뉴 영역 - JavaScript로 동적 생성됨 -->
-        <div class="menu" id="menu"></div>
-        <!-- 사용자 옵션 영역 -->
+        <div class="logo" onclick="location.href='index.html'">WED</div>    
+        <div class="menu">
+            <div><a href="clothes.jsp">상의</a></div>
+            <div><a href="pants.jsp">하의</a></div>
+            <div><a href="shoes.jsp">신발</a></div>
+            <div><a href="accessory.jsp">악세서리</a></div>
+        </div>
         <div class="user-options">
-            <!-- 문의하기 버튼 -->
-            <div class="inquiry">문의하기</div>
-            <!-- 로그인/회원가입 버튼 영역 -->
-            <div class="login-signup">
-                <!-- 로그인 페이지 링크 -->
-                <span onclick="location.href='login.html'">로그인</span>
-                <!-- 구분선 -->
-                <span class="separator"></span>
-                <!-- 회원가입 페이지 링크 -->
-                <span onclick="location.href='signup.html'">회원가입</span>
+            <div class="inquiry">
+                <a href="qna.html">문의하기</a>
             </div>
+            <div class="login-signup" id="loginSection"></div>
         </div>
     </div>
 
