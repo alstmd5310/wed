@@ -3,105 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QnA 게시판</title>
     <link rel="stylesheet" href="common.css">
+    <title>QnA 게시판</title>
     <style>
-        /* QnA 페이지 전용 스타일 */
+        body {
+            margin-top: 90px; /* 헤더와 겹치지 않도록 간격 조정 */
+        }
+
         .qna-container {
-            width: 80%;
-            margin: 150px auto; /* 상단 메뉴바와의 간격 */
+            max-width: 800px;
+            margin: 20px auto; /* 중앙 정렬 및 상하 간격 추가 */
             padding: 20px;
             background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .qna-form {
+            margin-bottom: 20px;
         }
 
         .qna-item {
-            padding: 15px;
             margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
         }
 
-        .qna-item h3 {
-            margin: 0;
-            font-size: 18px;
-            color: #333;
+        .qna-title {
+            font-size: 20px;
+            margin-bottom: 10px;
         }
 
-        .qna-item p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #666;
+        .qna-content {
+            font-size: 16px;
+            margin-bottom: 10px;
         }
 
-        .qna-item .answer {
-            color: #007bff;
-            font-weight: bold;
+        .qna-answer {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-left: 4px solid #007bff;
         }
     </style>
-    <script>
-        async function loadQnAs() {
-            try {
-                const response = await fetch('load_aqns.jsp');
-                const data = await response.json();
-
-                if (data.success) {
-                    const qnaContainer = document.getElementById('qna-container');
-                    qnaContainer.innerHTML = ''; // 기존 내용 초기화
-
-                    data.qnas.forEach(qna => {
-                        const qnaElement = document.createElement('div');
-                        qnaElement.className = 'qna-item';
-                        qnaElement.innerHTML = `
-                            <h3>${qna.title}</h3>
-                            <p>작성자: ${qna.asker_name}</p>
-                            <p>${qna.content}</p>
-                            <p>작성일: ${qna.created_at}</p>
-                            ${qna.answerer_name !== "미답변"
-                                ? `<p class="answer">답변자: ${qna.answerer_name} (답변일: ${qna.answered_at})</p>`
-                                : `<p class="answer">미답변</p>`}
-                        `;
-                        qnaContainer.appendChild(qnaElement);
-                    });
-                } else {
-                    console.error('QnA 데이터를 불러오는 중 오류:', data.message);
-                }
-            } catch (error) {
-                console.error('서버 연결 오류:', error);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', loadQnAs);
-    </script>
 </head>
 <body>
     <div class="header">
         <div class="logo" onclick="location.href='index.html'">WED</div>
         <div class="menu">
-            <a href="clothes.jsp">상의</a>
-            <a href="pants.jsp">하의</a>
-            <a href="shoes.jsp">신발</a>
-            <a href="accecarry.jsp">악세서리</a>
+            <div><a href="clothes.jsp">상의</a></div>
+            <div><a href="pants.jsp">하의</a></div>
+            <div><a href="shoes.jsp">신발</a></div>
+            <div><a href="accessory.jsp">악세서리</a></div>
         </div>
         <div class="user-options">
-            <!-- 문의하기 버튼 -->
             <div class="inquiry">문의하기</div>
-            <!-- 로그인/회원가입 버튼 영역 -->
-            <div class="login-signup">
-                <!-- 로그인 페이지 링크 -->
-                <span onclick="location.href='login.html'">로그인</span>
-                <!-- 구분선 -->
-                <span class="separator"></span>
-                <!-- 회원가입 페이지 링크 -->
-                <span onclick="location.href='signup.html'">회원가입</span>
-            </div>
+            <div class="login-signup" id="loginSection"></div>
         </div>
     </div>
 
-    <div id="qna-container" class="qna-container">
-        <!-- QnA 데이터가 여기에 표시됩니다 -->
+    <div class="qna-container">
+        <h2>QnA 게시판</h2>
+        <div class="qna-form">
+            <input type="text" id="qna-title" placeholder="제목 입력" class="input-field" required>
+            <textarea id="qna-content" placeholder="내용 입력" class="input-field" required></textarea>
+            <button class="button primary-button" onclick="submitQuestion()">질문 등록</button>
+        </div>
+        <div id="qna-list"></div>
     </div>
+
+    <script>
+    async function loadQuestions() {
+    try {
+        const response = await fetch('load_aqns.jsp'); // 데이터를 요청
+        const questions = await response.json(); // JSON으로 변환
+        console.log(questions); // 응답 데이터를 확인
+        const qnaList = document.getElementById('qna-list'); // QnA 리스트 DOM 요소 가져오기
+        qnaList.innerHTML = ''; // 기존 내용을 초기화
+
+        // 데이터를 순회하며 화면에 렌더링
+        questions.forEach(q => {
+            const qnaItem = document.createElement('div');
+            qnaItem.className = 'qna-item';
+
+            qnaItem.innerHTML = `
+                <div class="qna-title"><strong>${q.title}</strong></div>
+                <div class="qna-content">${q.content}</div>
+                <div>작성자: ${q.asker_name} | 작성일: ${q.created_at}</div>
+                ${q.answered_at 
+                    ? `<div class="qna-answer">답변: ${q.answer_content} (답변자: ${q.answerer_name})</div>` 
+                    : `<textarea id="answer-${q.qna_id}" placeholder="답변 작성"></textarea>
+                       <button onclick="submitAnswer(${q.qna_id})">답변 등록</button>`}
+            `;
+            qnaList.appendChild(qnaItem);
+        });
+    } catch (error) {
+        console.error('질문 로드 중 오류 발생:', error); // 오류 로그 출력
+    }
+}
+
+
+
+
+
+
+        async function submitQuestion() {
+    const title = document.getElementById("qna-title").value;
+    const content = document.getElementById("qna-content").value;
+    const memberId = localStorage.getItem("userID");
+
+    const response = await fetch("qna.jsp", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}&memberId=${memberId}`,
+    });
+
+    const result = await response.json();
+    if (result.success) {
+        alert("질문이 등록되었습니다.");
+        loadQuestions();
+    } else {
+        alert(result.error || "질문 등록 중 오류가 발생했습니다.");
+    }
+}
+
+
+
+async function submitAnswer(qnaId) {
+    const answerContent = document.getElementById(`answer-${qnaId}`).value;
+    const answerMemberId = localStorage.getItem("userID"); // 로그인한 사용자 ID 가져오기
+
+    if (!answerContent.trim()) {
+        alert("답변 내용을 입력해주세요.");
+        return;
+    }
+
+    try {
+        const response = await fetch("answer.jsp", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `qna_id=${qnaId}&answer_content=${encodeURIComponent(answerContent)}&answer_member_id=${answerMemberId}`,
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("답변이 등록되었습니다.");
+            loadQuestions(); // QnA 리스트 다시 로드
+        } else {
+            alert(result.error || "답변 등록 중 오류가 발생했습니다.");
+        }
+    } catch (error) {
+        console.error("서버와 통신 중 오류가 발생했습니다.", error);
+        alert("서버와 통신 중 오류가 발생했습니다.");
+    }
+}
+
+
+
+
+        loadQuestions();
+    </script>
 </body>
 </html>
