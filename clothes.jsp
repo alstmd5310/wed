@@ -80,7 +80,7 @@
                             <h3><%= name %></h3>
                             <p>₩<%= String.format("%,d", price) %></p>
                             <!-- 장바구니 버튼 클릭 시 cart.jsp로 이동 -->
-                            <form action="cart.jsp" method="post">
+                            <form action="testcart.jsp" method="post">
                                 <input type="hidden" name="product_id" value="<%= id %>">
                                 <button type="submit">장바구니</button>
                             </form>
