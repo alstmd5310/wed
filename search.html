@@ -3,38 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>검색 페이지</title>
+    <link rel="stylesheet" href="common.css">
+    <title>상품 검색</title>
     <style>
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .item {
-            border: 1px solid black;
-            border-radius: 5px;
-            width: 250px;
-            padding: 20px;
+        /* 검색 섹션 스타일 */
+        .search-section {
+            margin-top: 120px; /* 헤더 아래 여백 추가 */
             text-align: center;
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
-        .item img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
+
+        .search-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
         }
-        .item h3 {
-            font-size: 18px;
-            margin: 10px 0;
+
+        .search-section input {
+            width: 60%; /* 입력창 너비 조정 */
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
-        .item p {
-            color: #555;
-            font-size: 14px;
-            margin: 10px 0;
+
+        .search-section button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
+
+        .search-section button:hover {
+            background-color: #0056b3;
+        }
+           .item img {
+        max-width: 100%;  /* 컨테이너 너비에 맞춤 */
+        height: 150px;    /* 고정 높이 축소 */
+        object-fit: cover; /* 비율 유지하며 영역 맞춤 */
+        margin-bottom: 10px;
+    }
     </style>
     <script>
         async function searchProducts() {
@@ -48,8 +60,9 @@
             }
 
             try {
-                const response = await fetch(`search.php?query=${encodeURIComponent(input)}`);
-                const products = await response.json();
+                // 검색 API 호출
+                const response = await fetch(`search.jsp?query=${encodeURIComponent(input)}`);
+                const products = await response.json(); // JSON 파싱
 
                 if (products.length === 0) {
                     resultsContainer.innerHTML = '<p>검색 결과가 없습니다.</p>';
@@ -62,12 +75,12 @@
                 products.forEach(product => {
                     const item = document.createElement('div');
                     item.className = 'item';
+                    item.onclick = () => location.href = `detail.jsp?id=${product.id}`;
                     item.innerHTML = `
                         <img src="${product.image_url}" alt="${product.name}">
                         <h3>${product.name}</h3>
                         <p>카테고리: ${product.category}</p>
                         <p>가격: ${product.price}원</p>
-                        <p>${product.description}</p>
                     `;
                     grid.appendChild(item);
                 });
@@ -80,9 +93,28 @@
     </script>
 </head>
 <body>
-    <div>
-        <h2>검색하기</h2>
-        <input type="text" id="search-input" placeholder="검색어를 입력하세요">
+    <!-- 헤더 섹션 -->
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">WED</div>    
+        <div class="menu">
+            <div><a href="clothes.jsp">상의</a></div>
+            <div><a href="pants.jsp">하의</a></div>
+            <div><a href="shoes.jsp">신발</a></div>
+            <div><a href="accecarry.jsp">악세서리</a></div>
+        </div>
+        <div class="user-options">
+            <div class="inquiry">문의하기</div>
+            <div class="login-signup">
+                <span><a href="login.jsp">로그인</a></span> |
+                <span><a href="signup.jsp">회원가입</a></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 검색 섹션 -->
+    <div class="search-section">
+        <h2>상품 검색</h2>
+        <input type="text" id="search-input" placeholder="상품명을 입력하세요">
         <button onclick="searchProducts()">검색</button>
         <div id="search-results"></div>
     </div>

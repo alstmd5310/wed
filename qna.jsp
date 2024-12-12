@@ -1,96 +1,52 @@
-<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*, org.json.JSONObject" %>
+<%@ page contentType="application/json; charset=UTF-8" %>
+<%@ page import="java.io.*, javax.servlet.*, java.sql.*, org.json.*" %>
 <%
     response.setContentType("application/json; charset=UTF-8");
-    JSONObject responseJson = new JSONObject();
-
-    if (session.getAttribute("userId") == null) {
-        responseJson.put("success", false);
-        responseJson.put("message", "로그인 후 이용해주세요.");
-        out.print(responseJson);
-        return;
-    }
-
+    PrintWriter out = response.getWriter();
     Connection conn = null;
     PreparedStatement pstmt = null;
 
     try {
+        // JSON 데이터 읽기
+        BufferedReader reader = request.getReader();
         StringBuilder sb = new StringBuilder();
         String line;
-        while ((line = request.getReader().readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             sb.append(line);
         }
-        JSONObject requestJson = new JSONObject(sb.toString());
 
-        String title = requestJson.getString("title");
-        String content = requestJson.getString("content");
+        JSONObject json = new JSONObject(sb.toString());
+        String title = json.getString("title");
+        String content = json.getString("content");
+        int memberId = json.getInt("member_id"); // 작성자 ID
+
+        // DB 연결
+        String dbUrl = "jdbc:mysql://localhost:3306/members";
+        String dbUser = "webuser";
+        String dbPassword = "webpassword";
 
         Class.forName("com.mysql.cj.jdbc.Driver");
-        conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/inquiries?useUnicode=true&characterEncoding=utf8",
-            "webuser", "webpassword"
-        );
+        conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
-        String sql = "INSERT INTO inquiries (title, content, created_at) VALUES (?, ?, NOW())";
+        // QnA 데이터 저장
+        String sql = "INSERT INTO qna (title, content, created_at, member_id) VALUES (?, ?, NOW(), ?)";
         pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, title);
         pstmt.setString(2, content);
-        pstmt.executeUpdate();
+        pstmt.setInt(3, memberId);
 
-        responseJson.put("success", true);
-        responseJson.put("message", "문의가 성공적으로 등록되었습니다.");
-    } catch (Exception e) {
-        responseJson.put("success", false);
-        responseJson.put("message", e.getMessage());
-    } finally {
-        if (pstmt != null) pstmt.close();
-        if (conn != null) conn.close();
-    }
+        int result = pstmt.executeUpdate();
 
-    out.print(responseJson);
-%>
-
-<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*, org.json.JSONObject, org.json.JSONArray" %>
-<%
-    response.setContentType("application/json; charset=UTF-8");
-    JSONObject responseJson = new JSONObject();
-    JSONArray inquiriesArray = new JSONArray();
-
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-
-    try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/inquiries?useUnicode=true&characterEncoding=utf8",
-            "webuser", "webpassword"
-        );
-
-        String sql = "SELECT title, content, created_at, answered_at FROM inquiries ORDER BY created_at DESC";
-        pstmt = conn.prepareStatement(sql);
-        rs = pstmt.executeQuery();
-
-        while (rs.next()) {
-            JSONObject inquiry = new JSONObject();
-            inquiry.put("title", rs.getString("title"));
-            inquiry.put("content", rs.getString("content"));
-            inquiry.put("created_at", rs.getString("created_at"));
-            inquiry.put("answered_at", rs.getString("answered_at"));
-            inquiriesArray.put(inquiry);
+        if (result > 0) {
+            out.print("{\"success\": true}");
+        } else {
+            out.print("{\"success\": false, \"message\": \"DB 삽입 실패\"}");
         }
-
-        responseJson.put("success", true);
-        responseJson.put("inquiries", inquiriesArray);
     } catch (Exception e) {
-        responseJson.put("success", false);
-        responseJson.put("message", e.getMessage());
+        e.printStackTrace();
+        out.print("{\"success\": false, \"message\": \"서버 오류 발생\"}");
     } finally {
-        if (rs != null) rs.close();
-        if (pstmt != null) pstmt.close();
-        if (conn != null) conn.close();
+        if (pstmt != null) try { pstmt.close(); } catch (SQLException e) {}
+        if (conn != null) try { conn.close(); } catch (SQLException e) {}
     }
-
-    out.print(responseJson);
 %>
